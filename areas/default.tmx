@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.5" orientation="isometric" renderorder="right-down" compressionlevel="0" width="80" height="80" tilewidth="64" tileheight="32" infinite="0" nextlayerid="44" nextobjectid="2229">
+<map version="1.8" tiledversion="1.8.5" orientation="isometric" renderorder="right-down" compressionlevel="0" width="80" height="80" tilewidth="64" tileheight="32" infinite="0" nextlayerid="44" nextobjectid="2230">
  <editorsettings>
   <export target="../../../tmx-parser/default.json" format="json"/>
  </editorsettings>
@@ -549,6 +549,7 @@
   <object id="2228" name="Water?" type="MARKER" x="2172" y="2152">
    <point/>
   </object>
+  <object id="2229" type="Home Warp" gid="1" x="1288" y="1288" width="60" height="32"/>
  </objectgroup>
  <layer id="12" name="Floor 2" width="80" height="80" offsetx="0" offsety="-64">
   <data encoding="csv">
