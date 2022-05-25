@@ -1,0 +1,515 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "areas/net_city.tmx",
+    "automapping.whileDrawing": false,
+    "expandedProjectPaths": [
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/prefabs",
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles",
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor",
+        ".",
+        "areas"
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Desktop/default.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1599.5,
+                "y": 662
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/default.tmx": {
+            "scale": 4,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1460.75,
+                "y": 725.125
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/screen.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/simple-graveyard-tiles-64-40.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/test-staggered.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1144,
+                "y": 800
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/tutorial-zone.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 950.0000000000001,
+                "y": 612.1212121212122
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/Darkchip13x32.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/Tombstone_exe6.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/back-stairs.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/cloud.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/coffee.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/cursed-stairs-2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/floor.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/gate.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/home_warp.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/hp_warp.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/screen.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/simple-graveyard-stairs-63-55.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/simple-graveyard-tiles-64-40.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/stairs.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/test-back-stairs.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/tree.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/warp.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/coffee.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/floor.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/gate.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/home_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/hp_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/tree.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/tiles/warp.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/prefabs/floor-tiles.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/prefabs/prefab-0.json": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1218.75,
+                "y": 676.5
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/prefabs/untitled.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 160.25,
+                "y": 73.5
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/resources/floor-tiles.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/resources/warp.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/back-stairs.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/connection.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/forward-stairs.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/ground_feature.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/prefab_tiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/wall_feature.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-biome-map-generator/biomes/grass-biome.json": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 105.49999999999999,
+                "y": 385.3333333333333
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-biome-map-generator/biomes/water biome.json": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 135.83333333333331,
+                "y": 307.66666666666663
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-biome-map-generator/biomes/water-biome.json": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 152.49999999999997,
+                "y": 194.66666666666669
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/incomplete-map.json": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 380.33333333333337,
+                "y": 210.66666666666663
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/test-tiled-map.json": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 277.33333333333337,
+                "y": 666.3333333333333
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/test-tiled-map.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 271.5,
+                "y": 305.75
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/town-incomplete.json": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 110.33333333333331,
+                "y": 178.33333333333331
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/town-training-map.json": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 988.5,
+                "y": 1295.5
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/training-map-emerald.json": {
+            "scale": 0.3515,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 802.2759601706971,
+                "y": 802.2759601706973
+            }
+        },
+        "C:/Users/Keris/Documents/Repos/wfc-style-level-generator/training-map.json": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 381.5,
+                "y": 435
+            }
+        },
+        "C:/Users/Keris/Downloads/0ad4b08fde6deafd7fdb3632cf0450f4.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Keris/Downloads/BeastStatueCentral3_exe6.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/Documents/ONB_Scriptable_Server/assets/tiles/cloud.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/MMBNOpen Modding/TilesOW/Clouds/clouds.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ONB_Scriptable_Server/assets/tiles/TilesColorful.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/areas/NewNewTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/BBS.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/BoktaiDolls28x33.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/BugFragTrader.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/CloudsFull.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/Darkchip13x32.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/LargeFire.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/LiberationPanels48x24.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/ProgramChipForm.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/SDoor.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/TilesColorful.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/UndernetStairs.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/UndernetTiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/home_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/hp_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/Downloads/ScriptableServer_-_Copy/ScriptableServer - Copy/assets/tiles/stairs.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/cloud.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/coffee.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/floor.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/gate.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/home_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/screen.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/tree.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Keris/assets/tiles/warp.tsx": {
+            "scaleInDock": 1
+        },
+        "areas/net_city.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2328.7878787878785,
+                "y": 1306.060606060606
+            }
+        },
+        "assets/assets/ezlibs-assets/ezmystery/GreenMysteryData.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "assets/assets/ezlibs-assets/ezmystery/PurpleMysteryData.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/ezlibs-assets/ezmystery/BlueMysteryData.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/BlueMysteryData.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/Tombstone_exe6.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/coffee.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/crater.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/gate.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "assets/objects/home_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/simple-graveyard-arrows-70-44.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/test_building.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "assets/objects/test_building_top.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/test_warp.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/tree.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/vendor_desk.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/objects/warp.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/Skybox_Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "assets/tiles/cursed-stairs-2.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "assets/tiles/simple-graveyard-conveyers-64-40.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/simple-graveyard-stairs-63-55.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/simple-graveyard-tiles-64-40.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "assets/tiles/tall_tile.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/test_building.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/test_building_top.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "assets/tiles/test_floor.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/test_wall.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/tiles/test_warp.tsx": {
+            "scaleInDock": 1
+        }
+    },
+    "frame.defaultDuration": 100,
+    "last.exportedFilePath": "C:/Users/Keris/Documents/tmx-parser",
+    "last.externalTilesetPath": "C:/Users/Keris/Documents/Repos/net-city/assets/objects",
+    "last.imagePath": "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles",
+    "map.fixedSize": true,
+    "map.height": 20,
+    "map.lastUsedExportFilter": "JSON map files (*.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.orientation": null,
+    "map.tileHeight": 32,
+    "map.tileWidth": 64,
+    "map.width": 20,
+    "openFiles": [
+        "areas/net_city.tmx"
+    ],
+    "project": "net-city.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "areas/net_city.tmx",
+        "assets/tiles/test_building_top.tsx",
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/prefabs/prefab-0.json",
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/back-stairs.tsx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/warp.tsx",
+        "C:/Users/Keris/Documents/Repos/openMMBN-web-map-generator/prefab-processor/tiles/forward-stairs.tsx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/default.tmx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/cursed-stairs-2.tsx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/back-stairs.tsx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/home_warp.tsx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/assets/tiles/simple-graveyard-stairs-63-55.tsx",
+        "C:/Users/Keris/Documents/Repos/Scriptable-OpenNetBattle-Server/areas/simple-graveyard-tiles-64-40.tsx"
+    ],
+    "tileset.embedInMap": false,
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 0,
+    "tileset.spacing": 0,
+    "tileset.tileSize": {
+        "height": 40,
+        "width": 79
+    },
+    "tileset.transparentColor": "#ff00ff",
+    "tileset.type": 0,
+    "tileset.useTransparentColor": false
+}
