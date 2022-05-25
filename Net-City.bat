@@ -1,0 +1,1 @@
+net_battle_server.exe -p 6900 
