@@ -10,7 +10,7 @@
   <property name="Honor HPMem" type="bool" value="true"/>
   <property name="Name" value="Net City"/>
   <property name="Snow Song" value="/server/assets/all_i_want.ogg"/>
-  <property name="Song" value="/server/assets/netcity.mid"/>
+  <property name="Song" value="/server/assets/netcityjams.mid"/>
   <property name="Swimming Allowed" type="bool" value="true"/>
  </properties>
  <tileset firstgid="1" source="../assets/objects/home_warp.tsx"/>
