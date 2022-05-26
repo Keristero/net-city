@@ -323,9 +323,9 @@
 0,0,0,0,0,0,0,0,11,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,13,13,13,13,13,13,13,13,13,13,13,13,13,13,31,11,11,0,0,0,31,31,31,14,14,14,31,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,11,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,13,13,13,13,13,13,13,13,13,13,13,13,13,13,31,31,31,31,31,31,31,31,31,14,14,14,31,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,11,31,14,14,14,31,31,31,31,31,31,11,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,14,14,14,31,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,15,15,15,15,15,15,15,31,13,13,13,13,11,11,11,13,13,13,13,13,13,13,13,13,13,13,13,13,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,31,31,15,15,31,31,15,31,13,13,13,13,11,11,11,13,13,13,13,13,13,13,13,13,13,13,13,13,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,31,31,15,15,31,31,15,31,13,13,13,13,11,11,11,13,0,0,0,13,13,13,13,13,13,13,13,13,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,15,15,15,15,15,15,15,31,13,13,13,13,11,11,11,13,13,13,13,13,13,13,12,12,12,12,13,13,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,31,31,15,15,31,31,15,31,13,13,13,13,11,11,11,13,13,13,13,13,13,13,12,12,12,12,13,13,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,31,31,15,15,31,31,15,31,13,13,13,13,11,11,11,13,0,0,0,13,13,13,12,12,12,12,13,13,31,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,31,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,15,15,15,15,15,15,15,31,13,13,13,13,11,11,11,13,0,0,0,13,13,13,13,13,13,13,13,13,31,14,14,14,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,15,15,15,15,15,15,15,31,13,13,13,13,11,11,11,13,0,0,0,13,13,13,13,13,13,13,13,13,31,14,14,14,31,13,13,13,13,13,13,13,13,13,13,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,11,31,14,14,14,31,15,31,31,15,15,31,31,15,31,13,13,13,13,11,11,11,13,13,13,0,0,0,13,13,13,13,13,13,13,31,14,14,14,31,13,13,13,13,13,13,13,13,13,13,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -362,7 +362,7 @@
 </data>
  </layer>
  <objectgroup id="19" name="Ground Objects" offsetx="0" offsety="-48">
-  <object id="1697" name="to default (test)" type="Radius Warp" x="1152" y="1104" height="160">
+  <object id="1697" name="to default (test)" type="Radius Warp" x="1147" y="1099" height="160">
    <properties>
     <property name="Activation Radius" type="float" value="0.6"/>
     <property name="Arrival Animation" value="arrow_up_left_in"/>
@@ -378,7 +378,7 @@
   <object id="1727" gid="6" x="640" y="448" width="44" height="61"/>
   <object id="1728" gid="6" x="736" y="448" width="44" height="61"/>
   <object id="1729" gid="6" x="832" y="448" width="44" height="61"/>
-  <object id="1782" name="Back Alley Shop" type="NPC" x="368" y="848">
+  <object id="1782" name="Back Alley Shop" type="NPC" x="363" y="843">
    <properties>
     <property name="Asset Name" value="heel-navi-exe4_black"/>
     <property name="Dialogue Type" value="random"/>
@@ -387,162 +387,162 @@
    </properties>
    <point/>
   </object>
-  <object id="1996" name="Rankings BBS" type="MARKER" x="576" y="1408">
+  <object id="1996" name="Rankings BBS" type="MARKER" x="571" y="1403">
    <point/>
   </object>
-  <object id="2051" name="Shop?" type="MARKER" x="752" y="336">
+  <object id="2051" name="Shop?" type="MARKER" x="747" y="331">
    <point/>
   </object>
-  <object id="2053" name="Shopping Mall" type="MARKER" x="456" y="296">
+  <object id="2053" name="Shopping Mall" type="MARKER" x="451" y="291">
    <point/>
   </object>
-  <object id="2054" name="Shop?" type="MARKER" x="880" y="592">
+  <object id="2054" name="Shop?" type="MARKER" x="859" y="571">
    <point/>
   </object>
-  <object id="2055" name="Event Square" type="MARKER" x="1392" y="1392">
+  <object id="2055" name="Event Square" type="MARKER" x="1387" y="1387">
    <point/>
   </object>
-  <object id="2056" name="Big Building?" type="MARKER" x="1168" y="1168">
+  <object id="2056" name="Big Building?" type="MARKER" x="1163" y="1163">
    <point/>
   </object>
-  <object id="2058" name="Free PVP Area" type="MARKER" x="576" y="1536">
+  <object id="2058" name="Free PVP Area" type="MARKER" x="571" y="1531">
    <point/>
   </object>
-  <object id="2113" name="Tournament Arena" type="MARKER" x="1880" y="624">
+  <object id="2113" name="Tournament Arena" type="MARKER" x="1875" y="619">
    <point/>
   </object>
-  <object id="2189" name="Apartment Entry" type="MARKER" x="1172" y="1972">
+  <object id="2189" name="Apartment Entry" type="MARKER" x="1167" y="1967">
    <point/>
   </object>
-  <object id="2190" name="Apartment Entry" type="MARKER" x="944" y="2000">
+  <object id="2190" name="Apartment Entry" type="MARKER" x="939" y="1995">
    <point/>
   </object>
-  <object id="2191" name="Apartment Entry" type="MARKER" x="624" y="2000">
+  <object id="2191" name="Apartment Entry" type="MARKER" x="619" y="1995">
    <point/>
   </object>
-  <object id="2192" name="Apartment Entry" type="MARKER" x="272" y="1424">
+  <object id="2192" name="Apartment Entry" type="MARKER" x="267" y="1419">
    <point/>
   </object>
-  <object id="2193" name="Apartment Entry" type="MARKER" x="560" y="1232">
+  <object id="2193" name="Apartment Entry" type="MARKER" x="655" y="1263">
    <point/>
   </object>
-  <object id="2213" name="Arena Entrance" type="MARKER" x="2112" y="928">
+  <object id="2213" name="Arena Entrance" type="MARKER" x="2107" y="923">
    <point/>
   </object>
-  <object id="2221" name="Park?" type="MARKER" x="1944" y="1924">
+  <object id="2221" name="Park?" type="MARKER" x="1939" y="1919">
    <point/>
   </object>
-  <object id="2227" name="Casino?" type="MARKER" x="52" y="424">
+  <object id="2227" name="Casino?" type="MARKER" x="47" y="419">
    <point/>
   </object>
-  <object id="2228" name="Water?" type="MARKER" x="2172" y="2152">
+  <object id="2228" name="Water?" type="MARKER" x="2167" y="2147">
    <point/>
   </object>
-  <object id="2229" type="Home Warp" gid="1" x="1288" y="1288" width="60" height="32"/>
-  <object id="2230" gid="63" x="2304" y="480" width="192" height="192"/>
-  <object id="2232" gid="63" x="2208" y="480" width="192" height="192"/>
-  <object id="2234" gid="63" x="2112" y="480" width="192" height="192"/>
-  <object id="2235" gid="63" x="2016" y="480" width="192" height="192"/>
-  <object id="2236" gid="63" x="1920" y="480" width="192" height="192"/>
-  <object id="2237" gid="63" x="1824" y="480" width="192" height="192"/>
-  <object id="2238" gid="63" x="1728" y="480" width="192" height="192"/>
-  <object id="2239" gid="63" x="1632" y="480" width="192" height="192"/>
-  <object id="2240" gid="63" x="1632" y="576" width="192" height="192"/>
-  <object id="2241" gid="63" x="1632" y="672" width="192" height="192"/>
-  <object id="2242" gid="63" x="1632" y="768" width="192" height="192"/>
-  <object id="2243" gid="63" x="1632" y="864" width="192" height="192"/>
-  <object id="2244" gid="63" x="1728" y="864" width="192" height="192"/>
-  <object id="2245" gid="63" x="1824" y="864" width="192" height="192"/>
-  <object id="2246" gid="63" x="1920" y="864" width="192" height="192"/>
-  <object id="2247" gid="63" x="2016" y="864" width="192" height="192"/>
-  <object id="2248" gid="63" x="2112" y="864" width="192" height="192"/>
-  <object id="2249" gid="63" x="2208" y="864" width="192" height="192"/>
-  <object id="2250" gid="63" x="2304" y="864" width="192" height="192"/>
-  <object id="2251" gid="63" x="2304" y="768" width="192" height="192"/>
-  <object id="2252" gid="63" x="2304" y="672" width="192" height="192"/>
-  <object id="2253" gid="63" x="2304" y="576" width="192" height="192"/>
-  <object id="2255" gid="63" x="1600" y="1152" width="192" height="192"/>
-  <object id="2256" gid="63" x="1600" y="1056" width="192" height="192"/>
-  <object id="2257" gid="63" x="1696" y="1120" width="192" height="192"/>
-  <object id="2259" gid="63" x="1152" y="640" width="192" height="192"/>
-  <object id="2260" gid="63" x="384" y="320" width="192" height="192"/>
-  <object id="2261" gid="63" x="576" y="288" width="192" height="192"/>
-  <object id="2262" gid="63" x="768" y="288" width="192" height="192"/>
-  <object id="2263" gid="63" x="480" y="256" width="192" height="192"/>
-  <object id="2264" gid="63" x="640" y="320" width="192" height="192"/>
-  <object id="2265" gid="63" x="672" y="320" width="192" height="192"/>
-  <object id="2266" gid="63" x="864" y="320" width="192" height="192"/>
-  <object id="2267" gid="63" x="1152" y="544" width="192" height="192"/>
-  <object id="2268" gid="63" x="1248" y="640" width="192" height="192"/>
-  <object id="2276" gid="63" x="2016" y="1312" width="192" height="192"/>
-  <object id="2277" gid="63" x="2016" y="1216" width="192" height="192"/>
-  <object id="2278" gid="63" x="2016" y="1120" width="192" height="192"/>
-  <object id="2279" gid="63" x="1824" y="1120" width="192" height="192"/>
-  <object id="2280" gid="63" x="1920" y="1120" width="192" height="192"/>
-  <object id="2281" gid="63" x="2048" y="1216" width="192" height="192"/>
-  <object id="2283" gid="63" x="1120" y="1120" width="192" height="192"/>
-  <object id="2284" gid="63" x="1120" y="1024" width="192" height="192"/>
-  <object id="2285" gid="63" x="1024" y="1120" width="192" height="192"/>
-  <object id="2286" gid="63" x="1024" y="1024" width="192" height="192"/>
-  <object id="2287" gid="63" x="832" y="640" width="192" height="192"/>
-  <object id="2288" gid="63" x="896" y="736" width="192" height="192"/>
-  <object id="2289" gid="63" x="736" y="640" width="192" height="192"/>
-  <object id="2290" gid="63" x="640" y="672" width="192" height="192"/>
-  <object id="2291" gid="63" x="448" y="608" width="192" height="192"/>
-  <object id="2292" gid="63" x="352" y="608" width="192" height="192"/>
-  <object id="2293" gid="63" x="608" y="768" width="192" height="192"/>
-  <object id="2294" gid="63" x="608" y="896" width="192" height="192"/>
-  <object id="2295" gid="63" x="608" y="992" width="192" height="192"/>
-  <object id="2296" gid="63" x="352" y="704" width="192" height="192"/>
-  <object id="2297" gid="63" x="320" y="800" width="192" height="192"/>
-  <object id="2298" gid="63" x="320" y="896" width="192" height="192"/>
-  <object id="2299" gid="63" x="352" y="992" width="192" height="192"/>
-  <object id="2300" gid="63" x="352" y="1088" width="192" height="192"/>
-  <object id="2301" gid="63" x="352" y="1184" width="192" height="192"/>
-  <object id="2302" gid="63" x="480" y="1184" width="192" height="192"/>
-  <object id="2305" gid="63" x="480" y="1088" width="192" height="192"/>
-  <object id="2306" gid="63" x="576" y="1088" width="192" height="192"/>
-  <object id="2307" gid="63" x="672" y="1088" width="192" height="192"/>
-  <object id="2308" gid="63" x="768" y="1088" width="192" height="192"/>
-  <object id="2309" gid="63" x="576" y="1184" width="192" height="192"/>
-  <object id="2310" gid="63" x="672" y="1184" width="192" height="192"/>
-  <object id="2311" gid="63" x="768" y="1184" width="192" height="192"/>
-  <object id="2312" gid="63" x="768" y="992" width="192" height="192"/>
-  <object id="2313" gid="63" x="768" y="896" width="192" height="192"/>
-  <object id="2314" gid="63" x="704" y="768" width="192" height="192"/>
-  <object id="2315" gid="63" x="800" y="768" width="192" height="192"/>
-  <object id="2334" gid="63" x="256" y="1344" width="192" height="192"/>
-  <object id="2335" gid="63" x="224" y="1440" width="192" height="192"/>
-  <object id="2336" gid="63" x="224" y="1504" width="192" height="192"/>
-  <object id="2337" gid="63" x="224" y="1632" width="192" height="192"/>
-  <object id="2338" gid="63" x="256" y="1728" width="192" height="192"/>
-  <object id="2339" gid="63" x="224" y="1824" width="192" height="192"/>
-  <object id="2340" gid="63" x="224" y="2016" width="192" height="192"/>
-  <object id="2341" gid="63" x="224" y="2112" width="192" height="192"/>
-  <object id="2342" gid="63" x="224" y="2208" width="192" height="192"/>
-  <object id="2345" gid="63" x="224" y="2304" width="192" height="192"/>
-  <object id="2346" gid="63" x="320" y="2304" width="192" height="192"/>
-  <object id="2348" gid="63" x="416" y="2336" width="192" height="192"/>
-  <object id="2349" gid="63" x="512" y="2336" width="192" height="192"/>
-  <object id="2350" gid="63" x="608" y="2336" width="192" height="192"/>
-  <object id="2355" gid="63" x="704" y="2336" width="192" height="192"/>
-  <object id="2356" gid="63" x="704" y="2240" width="192" height="192"/>
-  <object id="2364" gid="63" x="544" y="1856" width="192" height="192"/>
-  <object id="2365" gid="63" x="544" y="1952" width="192" height="192"/>
-  <object id="2366" gid="63" x="640" y="1952" width="192" height="192"/>
-  <object id="2368" gid="63" x="864" y="1952" width="192" height="192"/>
-  <object id="2369" gid="63" x="960" y="1952" width="192" height="192"/>
-  <object id="2375" gid="63" x="1312" y="1888" width="192" height="192"/>
-  <object id="2376" gid="63" x="1152" y="1920" width="192" height="192"/>
-  <object id="2377" gid="63" x="1216" y="1920" width="192" height="192"/>
-  <object id="2378" gid="63" x="1312" y="1792" width="192" height="192"/>
-  <object id="2379" gid="63" x="1216" y="1824" width="192" height="192"/>
-  <object id="2380" gid="63" x="1120" y="1824" width="192" height="192"/>
-  <object id="2381" gid="63" x="1024" y="1760" width="192" height="192"/>
-  <object id="2382" gid="63" x="1120" y="1728" width="192" height="192"/>
-  <object id="2383" gid="63" x="1216" y="1728" width="192" height="192"/>
-  <object id="2384" gid="63" x="1120" y="1632" width="192" height="192"/>
-  <object id="2385" gid="63" x="1056" y="1536" width="192" height="192"/>
+  <object id="2229" type="Home Warp" gid="1" x="1283" y="1283" width="60" height="32"/>
+  <object id="2230" gid="63" x="2283" y="459" width="192" height="192"/>
+  <object id="2232" gid="63" x="2187" y="459" width="192" height="192"/>
+  <object id="2234" gid="63" x="2091" y="459" width="192" height="192"/>
+  <object id="2235" gid="63" x="1995" y="459" width="192" height="192"/>
+  <object id="2236" gid="63" x="1899" y="459" width="192" height="192"/>
+  <object id="2237" gid="63" x="1803" y="459" width="192" height="192"/>
+  <object id="2238" gid="63" x="1707" y="459" width="192" height="192"/>
+  <object id="2239" gid="63" x="1611" y="459" width="192" height="192"/>
+  <object id="2240" gid="63" x="1611" y="555" width="192" height="192"/>
+  <object id="2241" gid="63" x="1611" y="651" width="192" height="192"/>
+  <object id="2242" gid="63" x="1611" y="747" width="192" height="192"/>
+  <object id="2243" gid="63" x="1611" y="843" width="192" height="192"/>
+  <object id="2244" gid="63" x="1707" y="843" width="192" height="192"/>
+  <object id="2245" gid="63" x="1803" y="843" width="192" height="192"/>
+  <object id="2246" gid="63" x="1899" y="843" width="192" height="192"/>
+  <object id="2247" gid="63" x="1995" y="843" width="192" height="192"/>
+  <object id="2248" gid="63" x="2091" y="843" width="192" height="192"/>
+  <object id="2249" gid="63" x="2187" y="843" width="192" height="192"/>
+  <object id="2250" gid="63" x="2283" y="843" width="192" height="192"/>
+  <object id="2251" gid="63" x="2283" y="747" width="192" height="192"/>
+  <object id="2252" gid="63" x="2283" y="651" width="192" height="192"/>
+  <object id="2253" gid="63" x="2283" y="555" width="192" height="192"/>
+  <object id="2255" gid="63" x="1579" y="1131" width="192" height="192"/>
+  <object id="2256" gid="63" x="1579" y="1035" width="192" height="192"/>
+  <object id="2257" gid="63" x="1675" y="1099" width="192" height="192"/>
+  <object id="2259" gid="63" x="1131" y="619" width="192" height="192"/>
+  <object id="2260" gid="63" x="363" y="299" width="192" height="192"/>
+  <object id="2261" gid="63" x="555" y="267" width="192" height="192"/>
+  <object id="2262" gid="63" x="747" y="267" width="192" height="192"/>
+  <object id="2263" gid="63" x="459" y="235" width="192" height="192"/>
+  <object id="2264" gid="63" x="619" y="299" width="192" height="192"/>
+  <object id="2265" gid="63" x="651" y="299" width="192" height="192"/>
+  <object id="2266" gid="63" x="843" y="299" width="192" height="192"/>
+  <object id="2267" gid="63" x="1131" y="523" width="192" height="192"/>
+  <object id="2268" gid="63" x="1227" y="619" width="192" height="192"/>
+  <object id="2276" gid="63" x="1995" y="1291" width="192" height="192"/>
+  <object id="2277" gid="63" x="1995" y="1195" width="192" height="192"/>
+  <object id="2278" gid="63" x="1995" y="1099" width="192" height="192"/>
+  <object id="2279" gid="63" x="1803" y="1099" width="192" height="192"/>
+  <object id="2280" gid="63" x="1899" y="1099" width="192" height="192"/>
+  <object id="2281" gid="63" x="2027" y="1195" width="192" height="192"/>
+  <object id="2283" gid="63" x="1099" y="1099" width="192" height="192"/>
+  <object id="2284" gid="63" x="1099" y="1003" width="192" height="192"/>
+  <object id="2285" gid="63" x="1003" y="1099" width="192" height="192"/>
+  <object id="2286" gid="63" x="1003" y="1003" width="192" height="192"/>
+  <object id="2287" gid="63" x="811" y="619" width="192" height="192"/>
+  <object id="2288" gid="63" x="875" y="715" width="192" height="192"/>
+  <object id="2289" gid="63" x="715" y="619" width="192" height="192"/>
+  <object id="2290" gid="63" x="619" y="651" width="192" height="192"/>
+  <object id="2291" gid="63" x="427" y="587" width="192" height="192"/>
+  <object id="2292" gid="63" x="331" y="587" width="192" height="192"/>
+  <object id="2293" gid="63" x="587" y="747" width="192" height="192"/>
+  <object id="2294" gid="63" x="587" y="875" width="192" height="192"/>
+  <object id="2295" gid="63" x="587" y="971" width="192" height="192"/>
+  <object id="2296" gid="63" x="331" y="683" width="192" height="192"/>
+  <object id="2297" gid="63" x="299" y="779" width="192" height="192"/>
+  <object id="2298" gid="63" x="299" y="875" width="192" height="192"/>
+  <object id="2299" gid="63" x="331" y="971" width="192" height="192"/>
+  <object id="2300" gid="63" x="331" y="1067" width="192" height="192"/>
+  <object id="2301" gid="63" x="331" y="1163" width="192" height="192"/>
+  <object id="2302" gid="63" x="459" y="1163" width="192" height="192"/>
+  <object id="2305" gid="63" x="459" y="1067" width="192" height="192"/>
+  <object id="2306" gid="63" x="555" y="1067" width="192" height="192"/>
+  <object id="2307" gid="63" x="651" y="1067" width="192" height="192"/>
+  <object id="2308" gid="63" x="747" y="1067" width="192" height="192"/>
+  <object id="2309" gid="63" x="555" y="1163" width="192" height="192"/>
+  <object id="2310" gid="63" x="651" y="1163" width="192" height="192"/>
+  <object id="2311" gid="63" x="747" y="1163" width="192" height="192"/>
+  <object id="2312" gid="63" x="747" y="971" width="192" height="192"/>
+  <object id="2313" gid="63" x="747" y="875" width="192" height="192"/>
+  <object id="2314" gid="63" x="683" y="747" width="192" height="192"/>
+  <object id="2315" gid="63" x="779" y="747" width="192" height="192"/>
+  <object id="2334" gid="63" x="235" y="1323" width="192" height="192"/>
+  <object id="2335" gid="63" x="203" y="1419" width="192" height="192"/>
+  <object id="2336" gid="63" x="203" y="1483" width="192" height="192"/>
+  <object id="2337" gid="63" x="203" y="1611" width="192" height="192"/>
+  <object id="2338" gid="63" x="235" y="1707" width="192" height="192"/>
+  <object id="2339" gid="63" x="203" y="1803" width="192" height="192"/>
+  <object id="2340" gid="63" x="203" y="1995" width="192" height="192"/>
+  <object id="2341" gid="63" x="203" y="2091" width="192" height="192"/>
+  <object id="2342" gid="63" x="203" y="2187" width="192" height="192"/>
+  <object id="2345" gid="63" x="203" y="2283" width="192" height="192"/>
+  <object id="2346" gid="63" x="299" y="2283" width="192" height="192"/>
+  <object id="2348" gid="63" x="395" y="2315" width="192" height="192"/>
+  <object id="2349" gid="63" x="491" y="2315" width="192" height="192"/>
+  <object id="2350" gid="63" x="587" y="2315" width="192" height="192"/>
+  <object id="2355" gid="63" x="683" y="2315" width="192" height="192"/>
+  <object id="2356" gid="63" x="683" y="2219" width="192" height="192"/>
+  <object id="2364" gid="63" x="523" y="1835" width="192" height="192"/>
+  <object id="2365" gid="63" x="523" y="1931" width="192" height="192"/>
+  <object id="2366" gid="63" x="619" y="1931" width="192" height="192"/>
+  <object id="2368" gid="63" x="843" y="1931" width="192" height="192"/>
+  <object id="2369" gid="63" x="939" y="1931" width="192" height="192"/>
+  <object id="2375" gid="63" x="1291" y="1867" width="192" height="192"/>
+  <object id="2376" gid="63" x="1131" y="1899" width="192" height="192"/>
+  <object id="2377" gid="63" x="1195" y="1899" width="192" height="192"/>
+  <object id="2378" gid="63" x="1291" y="1771" width="192" height="192"/>
+  <object id="2379" gid="63" x="1195" y="1803" width="192" height="192"/>
+  <object id="2380" gid="63" x="1099" y="1803" width="192" height="192"/>
+  <object id="2381" gid="63" x="1003" y="1739" width="192" height="192"/>
+  <object id="2382" gid="63" x="1099" y="1707" width="192" height="192"/>
+  <object id="2383" gid="63" x="1195" y="1707" width="192" height="192"/>
+  <object id="2384" gid="63" x="1099" y="1611" width="192" height="192"/>
+  <object id="2385" gid="63" x="1035" y="1515" width="192" height="192"/>
  </objectgroup>
  <layer id="12" name="Floor 2" width="80" height="80" offsetx="0" offsety="-64">
   <data encoding="csv">
