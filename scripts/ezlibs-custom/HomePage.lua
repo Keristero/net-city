@@ -20,8 +20,7 @@ function HomePage:new(player_id)
 end
 
 function HomePage:Initialize_from_memory()
-    local safe_secret = helpers.get_safe_player_secret(self.player_id)
-    local player_memory = ezmemory.get_player_memory(safe_secret)
+    local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
     Net.update_area(self.area_id, player_memory.home_page_data)
     self:Scan_and_validate()
     print('loaded home page from memory')
@@ -50,7 +49,7 @@ end
 
 function HomePage:Cancel_editing()
     --finishes and discards changes
-    HomePage:Cancel_current_operation()
+    self:Cancel_current_operation()
     self:Finish_editing()
     self:Initialize_from_memory()
 end
@@ -64,7 +63,7 @@ function HomePage:Edit_mode_prompt(player_id)
         local player_safe_secret = helpers.get_safe_player_secret(player_id)
         local is_owner = player_safe_secret == self.player_safe_secret
         if not is_owner then
-            Net.message_player(player_id, "You dont have permission to edit this page")
+            await(Async.message_player(player_id, "You dont have permission to edit this page"))
             return
         end
         if self.editor_id then
@@ -74,13 +73,13 @@ function HomePage:Edit_mode_prompt(player_id)
                 if res == 1 then
                     self:Finish_editing()
                     self:Save()
-                    await(Net.message_player(self.editor_id, "Saved"))
+                    await(Async.message_player(self.editor_id, "Saved"))
                 elseif res == 0 then
                     await(Async.message_player(self.editor_id, "Once more"))
                     res = await(Async.question_player(player_id, "Save changes?"))
                 end
                 if res == 0 then
-                    HomePage:Cancel_editing()
+                    self:Cancel_editing()
                 end
             end
         else
@@ -200,6 +199,7 @@ end
 
 function HomePage:Scan_and_validate()
     --parses the homepage to extract all the key objects used
+    print('scanning and validating')
     local object_ids = Net.list_objects(self.area_id)
     for index, object_id in ipairs(object_ids) do
         local object = Net.get_object_by_id(self.area_id, object_id)
@@ -212,6 +212,7 @@ function HomePage:Scan_and_validate()
             end
         end
     end
+    return true
 end
 
 function HomePage:Transfer_player(player_id)
