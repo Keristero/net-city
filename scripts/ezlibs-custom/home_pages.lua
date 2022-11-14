@@ -1,10 +1,9 @@
 local helpers = require('scripts/ezlibs-scripts/helpers')
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local HomePage = require("scripts/ezlibs-custom/HomePage")
+local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
 local loaded_homepages_by_safe_secret = {}
 local loaded_homepages_by_area_id = {}
-
-local base_homepage_map_id = 'base_homepage'
 
 --TODO
 --Dont use safe_secret for homepage area id, not safe :(
@@ -23,7 +22,7 @@ local function get_homepage_of_player(player_id)
         if player_memory.home_page_data then
             homepage:Initialize_from_memory()
         else
-            homepage:Initialize_from_template(base_homepage_map_id)
+            homepage:Initialize_from_template(home_page_decorations.base_homepage_map_id)
         end
         return homepage
     end

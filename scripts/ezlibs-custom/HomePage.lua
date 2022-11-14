@@ -1,12 +1,22 @@
 local helpers = require('scripts/ezlibs-scripts/helpers')
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local urlencode = require('scripts/ezlibs-scripts/urlencode')
-local Direction = require("scripts/ezlibs-scripts/direction")
 
 local net_city_map_id = 'default'
 local test_net_city_homepage_exit_id = 2193
 
+local homepage_menu_color = {r=20,g=50,b=200}
+local edit_mode_color = {r=100,g=100,b=100}
+
+local create_move_selection_operation = require('scripts/ezlibs-custom/homepage_operations/move_selection')
+local create_store_object_operation = require('scripts/ezlibs-custom/homepage_operations/store_object')
+local crate_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
+
 HomePage = {}
+
+local function create_bbs_option(text)
+    return {id= text, read= true, title=text, author= ""}
+end
     
 function HomePage:new(player_id)
     o = o or {}
@@ -22,8 +32,12 @@ end
 function HomePage:Initialize_from_memory()
     local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
     Net.update_area(self.area_id, player_memory.home_page_data)
-    self:Scan_and_validate()
-    print('loaded home page from memory')
+    local validation_error = self:Scan_and_validate()
+    if validation_error == nil then
+        print('loaded home page from memory')
+    else
+        error('corrupt home page data for '..self.player_safe_secret..' error= '..validation_error)
+    end
 end
 
 function HomePage:Initialize_from_template(template_map)
@@ -33,6 +47,19 @@ function HomePage:Initialize_from_template(template_map)
     Net.set_area_name(self.area_id,new_area_name)
     self:Save()
     print('generated new home page from base_homepage.tmx')
+end
+
+function HomePage:Finish_editing_and_save()
+    self:Cancel_current_operation()
+    self:Finish_editing()
+    self:Save()
+end
+
+function HomePage:Set_current_operation(operation)
+    if self.current_operation then
+        self.current_operation.cancel_func()
+    end
+    self.current_operation = operation
 end
 
 function HomePage:Finish_editing()
@@ -45,6 +72,8 @@ function HomePage:Start_editing(player_id)
     self.editor_id = player_id
     Net.set_object_class(self.area_id, self.home_warp_object.id, "Disabled Warp")
     Net.set_object_class(self.area_id, self.city_warp_object.id, "Disabled Warp")
+    --deep copy player memory so that we can restore it if they decide to cancel their edits
+    self.player_memory_backup = helpers.deep_copy(ezmemory.get_player_memory(self.player_safe_secret))
 end
 
 function HomePage:Cancel_editing()
@@ -52,56 +81,75 @@ function HomePage:Cancel_editing()
     self:Cancel_current_operation()
     self:Finish_editing()
     self:Initialize_from_memory()
+    if self.player_memory_backup then
+        ezmemory.dangerously_override_player_memory(self.player_safe_secret, self.player_memory_backup)
+        self.player_memory_backup = nil
+    end
 end
 
 function HomePage:Cancel_current_operation()
-    self.current_operation = nil
+    self:Set_current_operation(nil)
 end
 
-function HomePage:Edit_mode_prompt(player_id)
-    return async(function ()
-        local player_safe_secret = helpers.get_safe_player_secret(player_id)
-        local is_owner = player_safe_secret == self.player_safe_secret
-        if not is_owner then
-            await(Async.message_player(player_id, "You dont have permission to edit this page"))
-            return
+function HomePage:Open_menu(player_id)
+    local posts = {}
+    local menu_color = homepage_menu_color
+    local menu_title = "HomePage Options"
+    if self.editor_id then
+        menu_color = edit_mode_color
+        menu_title = "Editing"
+        if self.current_operation then
+            menu_title = menu_title.." ("..self.current_operation.name..")"
         end
-        if self.editor_id then
-            local res = await(Async.question_player(self.editor_id, "Finish Editing?"))
-            if res == 1 then
-                res = await(Async.question_player(player_id, "Save changes?"))
-                if res == 1 then
-                    self:Finish_editing()
-                    self:Save()
-                    await(Async.message_player(self.editor_id, "Saved"))
-                elseif res == 0 then
-                    await(Async.message_player(self.editor_id, "Once more"))
-                    res = await(Async.question_player(player_id, "Save changes?"))
-                end
-                if res == 0 then
-                    self:Cancel_editing()
-                end
-            end
-        else
-            local res = await(Async.question_player(player_id, "Edit Homepage?"))
-            if res == 1 then
-                self:Start_editing(player_id)
-                await(Async.message_player(self.editor_id, "You are now in edit mode"))
-            end
+        table.insert(posts, create_bbs_option("Move Objects"))
+        table.insert(posts, create_bbs_option("Place Objects"))
+        table.insert(posts, create_bbs_option("Store Objects"))
+        table.insert(posts, create_bbs_option("Save Changes"))
+        table.insert(posts, create_bbs_option("Discard Changes"))
+    else
+        table.insert(posts, create_bbs_option("Edit Homepage"))
+    end
+    local menu_board = Net.open_board(player_id, menu_title,menu_color,posts)
+    menu_board:on("post_selection", function (post)
+        print('postselection',post)
+        Net.close_bbs(player_id)
+        if post.post_id == "Save Changes" then
+            self:Finish_editing_and_save()
+        elseif post.post_id == "Discard Changes" then
+            self:Cancel_editing()
+        elseif post.post_id == "Edit Homepage" then
+            self:Start_editing(player_id)
+            self:Set_current_operation(create_move_selection_operation(self))
+        elseif post.post_id == "Move Objects" then
+            self:Set_current_operation(create_move_selection_operation(self))
+        elseif post.post_id == "Store Objects" then
+            self:Set_current_operation(create_store_object_operation(self))
+        elseif post.post_id == "Place Objects" then
+            self:Set_current_operation(crate_place_object_operation(self))
         end
     end)
 end
 
 function HomePage:Handle_tile_interaction(event)
+    --Allow owner to open the homepage menu
+    local player_safe_secret = helpers.get_safe_player_secret(event.player_id)
+    local is_owner = player_safe_secret == self.player_safe_secret
     local L_press = event.button == 1
-    if self.current_operation then
-        if self.editor_id == event.player_id then
-            self.current_operation.interact_func(self,event)
+    if L_press then
+        if not is_owner then
+            await(Async.message_player(event.player_id, "You dont have permission to manage this page"))
             return
         end
+        self:Open_menu(event.player_id)
+        return
     end
-    if L_press then
-        self:Edit_mode_prompt(event.player_id)
+
+    --Handle current operation
+    if self.current_operation then
+        if self.editor_id == event.player_id then
+            self.current_operation.tile_interact_func(event)
+            return
+        end
     end
 end
 
@@ -136,69 +184,35 @@ function HomePage:Handle_custom_warp(event)
 end
 
 function HomePage:Handle_object_interaction(event)
-    local A_press = event.button == 0
-    if A_press then
-        if not self.current_operation then
-            if self.editor_id == event.player_id then
-                self:Start_moving_operation(event.object_id)
-            end
+    if self.current_operation then
+        if self.editor_id == event.player_id then
+            self.current_operation.object_interact_func(event)
+            return
         end
     end
 end
 
-function HomePage:Start_moving_operation(object_id)
-    local original_object_info = Net.get_object_by_id(self.area_id, object_id)
-    local temporary_object_id = Net.create_object(self.area_id, original_object_info)
-    self.current_operation = {
-        type="moving",
-        object_id=object_id,
-        temporary_object_id=temporary_object_id,
-        tic_func=function(hp)
-            local player_position = Net.get_player_position(hp.editor_id)
-            local player_facing = Net.get_player_direction(hp.editor_id)
-            local temp_object_id = hp.current_operation.temporary_object_id
-            local direction_offset = Direction.to_vector(player_facing)
-            local new_x = player_position.x + direction_offset.x
-            local new_y = player_position.y + direction_offset.y
-            local new_z = player_position.z
-            Net.move_object(hp.area_id,temp_object_id,new_x,new_y,new_z)
-        end,
-        cancel_func=function(hp)
-            local temp_object_id = hp.current_operation.temporary_object_id
-            Net.remove_object(hp.area_id, temp_object_id)
-        end,
-        interact_func=function (hp,event)
-            local A_press = event.button == 0
-            if A_press then
-                local object_id = hp.current_operation.object_id
-                local temp_object_id = hp.current_operation.temporary_object_id
-                local temp_object_info = Net.get_object_by_id(hp.area_id, temp_object_id)
-                Net.remove_object(hp.area_id, temp_object_id)
-                Net.move_object(hp.area_id,object_id,temp_object_info.x,temp_object_info.y,temp_object_info.z)
-                print('finished moving object')
-                hp.current_operation = nil
-            end
-        end
-    }
-    print('started moving object')
-end
-
 function HomePage:Handle_tick(event)
     if self.editor_id and self.current_operation then
-        self.current_operation.tic_func(self)
+        self.current_operation.tic_func()
     end
 end
 
 function HomePage:Save()
     local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
     player_memory.home_page_data = Net.map_to_string(self.area_id)
-    if self:Scan_and_validate() then
+    local valitation_error = self:Scan_and_validate()
+    if valitation_error == nil then
         ezmemory.save_player_memory(self.player_safe_secret)
+    else
+        Net.message_player(self.editor_id, "Error saving homepage, resolve the following before saving again : "..valitation_error)
     end
 end
 
 function HomePage:Scan_and_validate()
     --parses the homepage to extract all the key objects used
+    self.home_warp_object = nil
+    self.city_warp_object = nil
     print('scanning and validating')
     local object_ids = Net.list_objects(self.area_id)
     for index, object_id in ipairs(object_ids) do
@@ -212,7 +226,13 @@ function HomePage:Scan_and_validate()
             end
         end
     end
-    return true
+    if self.home_warp_object == nil then
+        return "Missing home warp"
+    end
+    if self.city_warp_object == nil then
+        return "Missing city warp"
+    end
+    return nil
 end
 
 function HomePage:Transfer_player(player_id)

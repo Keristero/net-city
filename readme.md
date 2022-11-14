@@ -1,3 +1,12 @@
+# Net City Server
+
+## Homepages
+When a user connects to the server, they will have their own home page instance generated (based on base_homepage.tmx) and saved to their player_memory
+After some home pages have been generated, be careful not to change base_homepage.tmx in a way which would modify existing tile GIDs, the saved player homepages may break.
+
+### bugs
+if the server crashes while a player is removing decorations from their homepage they will end up with duplicates.
+
 ### ubuntu setup
 clone the repo
 `git clone --recurse-submodules --remote-submodules https://github.com/Keristero/net-city.git`
