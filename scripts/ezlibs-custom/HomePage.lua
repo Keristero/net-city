@@ -1,22 +1,21 @@
 local helpers = require('scripts/ezlibs-scripts/helpers')
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local urlencode = require('scripts/ezlibs-scripts/urlencode')
+local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
+local ezmenus = require('scripts/ezlibs-scripts/ezmenus')
 
 local net_city_map_id = 'default'
 local test_net_city_homepage_exit_id = 2193
 
 local homepage_menu_color = {r=20,g=50,b=200}
 local edit_mode_color = {r=100,g=100,b=100}
+local storage_menu_color = {r=40,g=150,b=40}
 
 local create_move_selection_operation = require('scripts/ezlibs-custom/homepage_operations/move_selection')
 local create_store_object_operation = require('scripts/ezlibs-custom/homepage_operations/store_object')
-local crate_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
+local create_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
 
 HomePage = {}
-
-local function create_bbs_option(text)
-    return {id= text, read= true, title=text, author= ""}
-end
     
 function HomePage:new(player_id)
     o = o or {}
@@ -92,58 +91,100 @@ function HomePage:Cancel_current_operation()
 end
 
 function HomePage:Open_menu(player_id)
-    local posts = {}
-    local menu_color = homepage_menu_color
-    local menu_title = "HomePage Options"
-    if self.editor_id then
-        menu_color = edit_mode_color
-        menu_title = "Editing"
-        if self.current_operation then
-            menu_title = menu_title.." ("..self.current_operation.name..")"
+    return async(function ()
+        local posts = {}
+        local menu_color = homepage_menu_color
+        local menu_title = "HomePage Options"
+        if self.editor_id then
+            menu_color = edit_mode_color
+            menu_title = "Editing"
+            if self.current_operation then
+                menu_title = menu_title.." ("..self.current_operation.name..")"
+            end
+            table.insert(posts, helpers.create_bbs_option("Move Objects"))
+            table.insert(posts, helpers.create_bbs_option("Place Objects"))
+            table.insert(posts, helpers.create_bbs_option("Store Objects"))
+            table.insert(posts, helpers.create_bbs_option("Save Changes"))
+            table.insert(posts, helpers.create_bbs_option("Discard Changes"))
+        else
+            table.insert(posts, helpers.create_bbs_option("Edit Homepage"))
         end
-        table.insert(posts, create_bbs_option("Move Objects"))
-        table.insert(posts, create_bbs_option("Place Objects"))
-        table.insert(posts, create_bbs_option("Store Objects"))
-        table.insert(posts, create_bbs_option("Save Changes"))
-        table.insert(posts, create_bbs_option("Discard Changes"))
-    else
-        table.insert(posts, create_bbs_option("Edit Homepage"))
-    end
-    local menu_board = Net.open_board(player_id, menu_title,menu_color,posts)
-    menu_board:on("post_selection", function (post)
-        print('postselection',post)
-        Net.close_bbs(player_id)
-        if post.post_id == "Save Changes" then
+        local menu_board = ezmenus.open_menu(player_id, menu_title,menu_color,posts)
+        local post_id = await(menu_board.selection_once())
+        print('post_id',post_id)
+        await(menu_board.close_async())
+        if post_id == "Save Changes" then
             self:Finish_editing_and_save()
-        elseif post.post_id == "Discard Changes" then
+        elseif post_id == "Discard Changes" then
             self:Cancel_editing()
-        elseif post.post_id == "Edit Homepage" then
+        elseif post_id == "Edit Homepage" then
             self:Start_editing(player_id)
             self:Set_current_operation(create_move_selection_operation(self))
-        elseif post.post_id == "Move Objects" then
+        elseif post_id == "Move Objects" then
             self:Set_current_operation(create_move_selection_operation(self))
-        elseif post.post_id == "Store Objects" then
+        elseif post_id == "Store Objects" then
             self:Set_current_operation(create_store_object_operation(self))
-        elseif post.post_id == "Place Objects" then
-            self:Set_current_operation(crate_place_object_operation(self))
+        elseif post_id == "Place Objects" then
+            local decoration_info = await(self:Storage_menu_async_selection())
+            if decoration_info then
+                self:Set_current_operation(create_place_object_operation(self,decoration_info))
+            end
         end
     end)
 end
 
-function HomePage:Handle_tile_interaction(event)
+function HomePage:Storage_menu_async_selection()
+    return async(function ()
+        local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
+        local player_decoration_objects = {}
+        local bbs_options = {}
+        --Count how many of each decoration the player has
+        for object_gid, decoration_object in pairs(home_page_decorations.objects) do
+            local item_id = ezmemory.get_item_id_by_name(decoration_object.name)
+            local item_count = 0
+            if player_memory.items[item_id] then
+                item_count = player_memory.items[item_id]
+            end
+            player_decoration_objects[object_gid] = item_count
+        end
+        --Create a menu for selecting a decoration object
+        for object_gid, item_count in pairs(player_decoration_objects) do
+            if item_count > 0 then
+                local item_name = home_page_decorations.objects[object_gid].name
+                local option = {id=object_gid, title=item_name.." ("..item_count..")",read=true,author=""}
+                table.insert(bbs_options, option)
+            end
+        end
+        --Open the menu and wait for a selection
+        local menu = ezmenus.open_menu(self.editor_id,"Storage",storage_menu_color,bbs_options)
+        local post_id = await(menu.selection_once())
+        if post_id == nil then
+            return nil
+        end
+        local place_object_gid = tonumber(post_id)
+        local decoration_info = home_page_decorations.gid[place_object_gid]
+        print('selected gid=',place_object_gid)
+        await(menu.close_async())
+        return decoration_info
+    end)
+end
+
+function HomePage:Try_open_menu(event)
     --Allow owner to open the homepage menu
     local player_safe_secret = helpers.get_safe_player_secret(event.player_id)
     local is_owner = player_safe_secret == self.player_safe_secret
-    local L_press = event.button == 1
-    if L_press then
-        if not is_owner then
-            await(Async.message_player(event.player_id, "You dont have permission to manage this page"))
-            return
-        end
-        self:Open_menu(event.player_id)
+    if not is_owner then
+        await(Async.message_player(event.player_id, "You dont have permission to manage this page"))
         return
     end
+    self:Open_menu(event.player_id)
+end
 
+function HomePage:Handle_tile_interaction(event)
+    local L_press = event.button == 1
+    if L_press then
+        self:Try_open_menu(event)
+    end
     --Handle current operation
     if self.current_operation then
         if self.editor_id == event.player_id then
@@ -184,6 +225,11 @@ function HomePage:Handle_custom_warp(event)
 end
 
 function HomePage:Handle_object_interaction(event)
+    local L_press = event.button == 1
+    if L_press then
+        self:Try_open_menu(event)
+    end
+
     if self.current_operation then
         if self.editor_id == event.player_id then
             self.current_operation.object_interact_func(event)
