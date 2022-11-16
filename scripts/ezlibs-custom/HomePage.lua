@@ -3,6 +3,7 @@ local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local urlencode = require('scripts/ezlibs-scripts/urlencode')
 local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
 local ezmenus = require('scripts/ezlibs-scripts/ezmenus')
+local Direction = require("scripts/ezlibs-scripts/direction")
 
 local net_city_map_id = 'default'
 local test_net_city_homepage_exit_id = 2193
@@ -10,6 +11,9 @@ local test_net_city_homepage_exit_id = 2193
 local homepage_menu_color = {r=20,g=50,b=200}
 local edit_mode_color = {r=100,g=100,b=100}
 local storage_menu_color = {r=40,g=150,b=40}
+local direction_menu_color = {r=100,g=100,b=40}
+
+local classes_to_disable = {"Home Warp","Custom Warp","Server Warp"}
 
 local create_move_selection_operation = require('scripts/ezlibs-custom/homepage_operations/move_selection')
 local create_store_object_operation = require('scripts/ezlibs-custom/homepage_operations/store_object')
@@ -49,9 +53,10 @@ function HomePage:Initialize_from_template(template_map)
 end
 
 function HomePage:Finish_editing_and_save()
+    local editor_id = self.editor_id
     self:Cancel_current_operation()
     self:Finish_editing()
-    self:Save()
+    self:Save(editor_id)
 end
 
 function HomePage:Set_current_operation(operation)
@@ -61,16 +66,36 @@ function HomePage:Set_current_operation(operation)
     self.current_operation = operation
 end
 
+function HomePage:Enable_class(object_id)
+    local object_info = Net.get_object_by_id(self.area_id, object_id)
+    if object_info.class:sub(-8) == "DISABLED" then
+        Net.set_object_class(self.area_id, object_id, object_info.class:sub(0,#object_info.class-8))
+        print("Re Enabled ",object_info.class)
+    end
+end
+
+function HomePage:Disable_class(object_id)
+    local object_info = Net.get_object_by_id(self.area_id, object_id)
+    if helpers.indexOf(classes_to_disable, object_info.class) ~= nil then
+        Net.set_object_class(self.area_id, object_id, object_info.class.."DISABLED")
+        print("disabled ",object_info.class)
+    end
+end
+
 function HomePage:Finish_editing()
     self.editor_id = nil
-    Net.set_object_class(self.area_id, self.home_warp_object.id, "Custom Warp")
-    Net.set_object_class(self.area_id, self.city_warp_object.id, "Custom Warp")
+    local area_objects = Net.list_objects(self.area_id)
+    for index, object_id in ipairs(area_objects) do
+        self:Enable_class(object_id)
+    end
 end
 
 function HomePage:Start_editing(player_id)
     self.editor_id = player_id
-    Net.set_object_class(self.area_id, self.home_warp_object.id, "Disabled Warp")
-    Net.set_object_class(self.area_id, self.city_warp_object.id, "Disabled Warp")
+    local area_objects = Net.list_objects(self.area_id)
+    for index, object_id in ipairs(area_objects) do
+        self:Disable_class(object_id)
+    end
     --deep copy player memory so that we can restore it if they decide to cancel their edits
     self.player_memory_backup = helpers.deep_copy(ezmemory.get_player_memory(self.player_safe_secret))
 end
@@ -211,9 +236,7 @@ function HomePage:Handle_custom_warp(event)
     local player_area = Net.get_player_area(event.player_id)
     local object = Net.get_object_by_id(player_area,event.object_id)
     local hp_object_type = object.custom_properties["hp_object_type"]
-    if hp_object_type == "home_warp" then
-        Net.kick_player(event.player_id, "logging out", true)
-    elseif hp_object_type == "city_warp" then
+    if hp_object_type == "city_warp" then
         --transfer player to their homepage
         local exit_object = Net.get_object_by_id(net_city_map_id,test_net_city_homepage_exit_id)
         local x = exit_object.x
@@ -221,7 +244,61 @@ function HomePage:Handle_custom_warp(event)
         local z = exit_object.z
         local direction = exit_object.custom_properties.direction
         Net.transfer_player(event.player_id, net_city_map_id, true, x,y,z,direction)
+        self:Cancel_editing()
+    elseif hp_object_type == "server_warp" then
+        local address = object.custom_properties["address"]
+        local port = tonumber(object.custom_properties["port"])
+        print(object.custom_properties)
+        if address and port then
+            Net.transfer_server(event.player_id, address, port, true,"From Homepage")
+        end
     end
+end
+
+function HomePage:Prompt_for_custom_properties(object_id)
+    return async(function ()
+        local object = Net.get_object_by_id(self.area_id,object_id)
+        local decoration_info = home_page_decorations.objects[object.data.gid]
+        for prop_name, prop_value in pairs(decoration_info.custom_properties) do
+            if prop_value:sub(-7) == "_prompt" then
+                local default_value = ""
+                if default_value:sub(-7) == "_prompt" then
+                    default_value = object.custom_properties[prop_name]
+                end
+                if decoration_info.custom_properties[prop_name.."_default"] then
+                    default_value = decoration_info.custom_properties[prop_name.."_default"]
+                end
+                local new_value = default_value
+                await(Async.message_player(self.editor_id, "Set " .. prop_name .. ":"))
+                if prop_value:sub(0,9) == "direction" then
+                    new_value = await(self:Direction_prompt())
+                else
+                    new_value = await(Async.prompt_player(self.editor_id,nil,default_value))
+                end
+                Net.set_object_custom_property(self.area_id, object_id, prop_name, new_value)
+            end
+        end
+    end)
+end
+
+function HomePage:Direction_prompt()
+    return async(function ()
+        local options = {}
+        local return_dir = "Up"
+        table.insert(options,helpers.create_bbs_option("Use current facing"))
+        for index, direction_value in ipairs(Direction.list) do
+            table.insert(options,helpers.create_bbs_option(direction_value))
+        end
+        local direction_menu = ezmenus.open_menu(self.editor_id,"Direction",direction_menu_color,options)
+        local post_id = await(direction_menu.selection_once())
+        await(direction_menu.close_async())
+        if post_id == "Use current facing" then
+            return_dir = Net.get_player_direction(self.editor_id)
+        elseif post_id ~= nil then
+            return_dir = post_id
+        end
+        return return_dir
+    end)
 end
 
 function HomePage:Handle_object_interaction(event)
@@ -244,14 +321,15 @@ function HomePage:Handle_tick(event)
     end
 end
 
-function HomePage:Save()
+function HomePage:Save(last_editor_id)
     local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
-    player_memory.home_page_data = Net.map_to_string(self.area_id)
-    local valitation_error = self:Scan_and_validate()
-    if valitation_error == nil then
+    self.valitation_error = self:Scan_and_validate()
+    if self.valitation_error == nil then
+        player_memory.home_page_data = Net.map_to_string(self.area_id)
         ezmemory.save_player_memory(self.player_safe_secret)
     else
-        Net.message_player(self.editor_id, "Error saving homepage, resolve the following before saving again : "..valitation_error)
+        self:Start_editing(last_editor_id)
+        Net.message_player(last_editor_id, "Error saving homepage, resolve the following before saving again : "..self.valitation_error)
     end
 end
 

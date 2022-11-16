@@ -38,7 +38,7 @@ home_page_decorations.create_object_from_gid = function(area_id, object_gid, x, 
     local decoration_info = home_page_decorations.objects[object_gid]
     local temporary_object_info = {
         name="",
-        type="",
+        class=decoration_info.class,
         visible=true,
         x=x,
         y=y,
@@ -55,6 +55,7 @@ home_page_decorations.create_object_from_gid = function(area_id, object_gid, x, 
         },
         custom_properties = decoration_info.custom_properties
     }
+    print(temporary_object_info)
     local temporary_object_id = Net.create_object(area_id, temporary_object_info)
     return temporary_object_id
 end

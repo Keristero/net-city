@@ -1,11 +1,11 @@
 local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
-local helpers = require('scripts/ezlibs-scripts/helpers')
 local Direction = require("scripts/ezlibs-scripts/direction")
 
 local function create_operation(hp,decoration_info)
     --TODO pop up a menu here with the list of objects in the player's storage that they can place, this operation will become an operation for placing that object until it is depleted
     local temporary_object_id = home_page_decorations.create_object_from_gid(hp.area_id, decoration_info.gid, 0,0,0)
+    hp:Disable_class(temporary_object_id)
 
     local function finish_placing()
         local temp_object_info = Net.get_object_by_id(hp.area_id, temporary_object_id)
@@ -15,6 +15,7 @@ local function create_operation(hp,decoration_info)
         ezmemory.remove_player_item(hp.editor_id, decoration_info.name, 1)
         local object_count = ezmemory.count_player_item(hp.editor_id, decoration_info.name)
         local next_operation = nil
+        hp:Prompt_for_custom_properties(new_object_id)
         if object_count > 0 then
             --if the player still has more of this item, repeat the place operation
             next_operation = create_operation(hp,decoration_info)
