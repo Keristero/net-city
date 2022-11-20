@@ -6,6 +6,7 @@ home_page_decorations.base_homepage_map_id = 'base_homepage'
 home_page_decorations.gid = {}
 home_page_decorations.tiles = {}
 home_page_decorations.objects = {}
+home_page_decorations.name_to_gid = {}
 
 local objects = Net.list_objects(home_page_decorations.base_homepage_map_id)
 for index, object_id in ipairs(objects) do
@@ -22,6 +23,7 @@ for index, object_id in ipairs(objects) do
             height = object.height
         }
         home_page_decorations.gid[object.data.gid] = decoration_info
+        home_page_decorations.name_to_gid[object.name] = object.data.gid
         --also save the decorations to a list of tiles and objects
         if object.custom_properties.is_tile == "true" then
             home_page_decorations.tiles[object.data.gid] = decoration_info
@@ -35,7 +37,7 @@ for index, object_id in ipairs(objects) do
 end
 
 home_page_decorations.create_object_from_gid = function(area_id, object_gid, x, y, z)
-    local decoration_info = home_page_decorations.objects[object_gid]
+    local decoration_info = home_page_decorations.gid[object_gid]
     local temporary_object_info = {
         name="",
         class=decoration_info.class,

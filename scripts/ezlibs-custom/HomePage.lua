@@ -18,6 +18,8 @@ local classes_to_disable = {"Home Warp","Custom Warp","Server Warp"}
 local create_move_selection_operation = require('scripts/ezlibs-custom/homepage_operations/move_selection')
 local create_store_object_operation = require('scripts/ezlibs-custom/homepage_operations/store_object')
 local create_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
+local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_operations/place_tile')
+local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
 
 HomePage = {}
     
@@ -128,7 +130,9 @@ function HomePage:Open_menu(player_id)
             end
             table.insert(posts, helpers.create_bbs_option("Move Objects"))
             table.insert(posts, helpers.create_bbs_option("Place Objects"))
+            table.insert(posts, helpers.create_bbs_option("Place Tiles"))
             table.insert(posts, helpers.create_bbs_option("Store Objects"))
+            table.insert(posts, helpers.create_bbs_option("Store Tiles"))
             table.insert(posts, helpers.create_bbs_option("Save Changes"))
             table.insert(posts, helpers.create_bbs_option("Discard Changes"))
         else
@@ -149,8 +153,16 @@ function HomePage:Open_menu(player_id)
             self:Set_current_operation(create_move_selection_operation(self))
         elseif post_id == "Store Objects" then
             self:Set_current_operation(create_store_object_operation(self))
+        elseif post_id == "Store Tiles" then
+            local removal_cursor_info = home_page_decorations.gid[home_page_decorations.name_to_gid["RemovalCursor"]]
+            self:Set_current_operation(create_store_tile_operation(self,removal_cursor_info))
+        elseif post_id == "Place Tiles" then
+            local decoration_info = await(self:Storage_menu_async_selection(home_page_decorations.tiles))
+            if decoration_info then
+                self:Set_current_operation(create_place_tile_operation(self,decoration_info))
+            end
         elseif post_id == "Place Objects" then
-            local decoration_info = await(self:Storage_menu_async_selection())
+            local decoration_info = await(self:Storage_menu_async_selection(home_page_decorations.objects))
             if decoration_info then
                 self:Set_current_operation(create_place_object_operation(self,decoration_info))
             end
@@ -158,13 +170,13 @@ function HomePage:Open_menu(player_id)
     end)
 end
 
-function HomePage:Storage_menu_async_selection()
+function HomePage:Storage_menu_async_selection(decoration_collection)
     return async(function ()
         local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
         local player_decoration_objects = {}
         local bbs_options = {}
         --Count how many of each decoration the player has
-        for object_gid, decoration_object in pairs(home_page_decorations.objects) do
+        for object_gid, decoration_object in pairs(decoration_collection) do
             local item_id = ezmemory.get_item_id_by_name(decoration_object.name)
             local item_count = 0
             if player_memory.items[item_id] then
@@ -175,7 +187,7 @@ function HomePage:Storage_menu_async_selection()
         --Create a menu for selecting a decoration object
         for object_gid, item_count in pairs(player_decoration_objects) do
             if item_count > 0 then
-                local item_name = home_page_decorations.objects[object_gid].name
+                local item_name = decoration_collection[object_gid].name
                 local option = {id=object_gid, title=item_name.." ("..item_count..")",read=true,author=""}
                 table.insert(bbs_options, option)
             end
