@@ -6,7 +6,7 @@ local ezmenus = require('scripts/ezlibs-scripts/ezmenus')
 local Direction = require("scripts/ezlibs-scripts/direction")
 
 local net_city_map_id = 'default'
-local test_net_city_homepage_exit_id = 2193
+local test_net_city_homepage_exit_id = 2431
 
 local homepage_menu_color = {r=20,g=50,b=200}
 local edit_mode_color = {r=100,g=100,b=100}
@@ -20,6 +20,10 @@ local create_store_object_operation = require('scripts/ezlibs-custom/homepage_op
 local create_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
 local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_operations/place_tile')
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
+
+local custom_custom_property_prompts = {
+    
+}
 
 HomePage = {}
     
@@ -205,6 +209,23 @@ function HomePage:Storage_menu_async_selection(decoration_collection)
         return decoration_info
     end)
 end
+
+function HomePage:Replace_tile(new_tile_gid,x,y,z,flipped_h,flipped_v,rotated)
+    local new_tile_info = home_page_decorations.gid[tonumber(new_tile_gid)]
+    local existing_tile = Net.get_tile(self.area_id, x, y, z)
+    local existing_decoration_info = home_page_decorations.gid[tonumber(existing_tile.gid)]
+    if tonumber(existing_tile.gid) == tonumber(new_tile_gid) then
+        return
+    end
+    if new_tile_info then
+        ezmemory.remove_player_item(self.editor_id, new_tile_info.name, 1)
+    end
+    Net.set_tile(self.area_id, x, y, z, new_tile_gid,flipped_h,flipped_v,rotated)
+    if existing_decoration_info then
+        ezmemory.give_player_item(self.editor_id, existing_decoration_info.name, 1)
+    end
+end
+
 
 function HomePage:Try_open_menu(event)
     --Allow owner to open the homepage menu

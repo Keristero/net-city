@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="isometric" renderorder="right-down" compressionlevel="0" width="80" height="80" tilewidth="64" tileheight="32" infinite="0" nextlayerid="44" nextobjectid="2396">
+<map version="1.9" tiledversion="1.9.2" orientation="isometric" renderorder="right-down" compressionlevel="0" width="80" height="80" tilewidth="64" tileheight="32" infinite="0" nextlayerid="44" nextobjectid="2432">
  <editorsettings>
   <export target="../../../tmx-parser/default.json" format="json"/>
  </editorsettings>
@@ -22,6 +22,7 @@
  <tileset firstgid="31" source="../assets/tiles/tall_tile.tsx"/>
  <tileset firstgid="35" source="../assets/tiles/Skybox_Tileset.tsx"/>
  <tileset firstgid="63" source="../assets/objects/test_building_stackable.tsx"/>
+ <tileset firstgid="64" source="../assets/objects/building_door.tsx"/>
  <layer id="35" name="BF3" width="80" height="80">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -383,9 +384,6 @@
   <object id="2051" name="Shop?" class="MARKER" x="747" y="331">
    <point/>
   </object>
-  <object id="2053" name="Shopping Mall" class="MARKER" x="451" y="291">
-   <point/>
-  </object>
   <object id="2054" name="Shop?" class="MARKER" x="859" y="571">
    <point/>
   </object>
@@ -399,27 +397,6 @@
    <point/>
   </object>
   <object id="2113" name="Tournament Arena" class="MARKER" x="1875" y="619">
-   <point/>
-  </object>
-  <object id="2189" name="Apartment Entry" class="MARKER" x="1167" y="1967">
-   <point/>
-  </object>
-  <object id="2190" name="Apartment Entry" class="MARKER" x="939" y="1995">
-   <point/>
-  </object>
-  <object id="2191" name="Apartment Entry" class="MARKER" x="619" y="1995">
-   <point/>
-  </object>
-  <object id="2192" name="Apartment Entry" class="MARKER" x="267" y="1419">
-   <point/>
-  </object>
-  <object id="2193" name="Apartment Entry" class="MARKER" x="640" y="1232">
-   <properties>
-    <property name="direction" value="Down Left"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="2213" name="Arena Entrance" class="MARKER" x="2107" y="923">
    <point/>
   </object>
   <object id="2221" name="Park?" class="MARKER" x="1939" y="1919">
@@ -536,7 +513,15 @@
   <object id="2383" gid="63" x="1195" y="1707" width="192" height="192"/>
   <object id="2384" gid="63" x="1099" y="1611" width="192" height="192"/>
   <object id="2385" gid="63" x="1035" y="1515" width="192" height="192"/>
-  <object id="2395" name="Building Entrance" class="MARKER" x="1072" y="1168">
+  <object id="2421" gid="2147483712" x="724" y="1188" width="22" height="48"/>
+  <object id="2424" name="Apartment Entry" gid="64" x="228.5" y="1395.5" width="22" height="48"/>
+  <object id="2425" name="Apartment Entry" gid="2147483712" x="596" y="1956" width="22" height="48"/>
+  <object id="2426" name="Apartment Entry" gid="2147483712" x="916" y="1956" width="22" height="48"/>
+  <object id="2427" name="Apartment Entry" gid="2147483712" x="1172" y="1924" width="22" height="48"/>
+  <object id="2428" name="Building Entry" gid="2147483712" x="1076" y="1124" width="22" height="48"/>
+  <object id="2429" name="Arena Entry" gid="2147483712" x="2068" y="868" width="22" height="48"/>
+  <object id="2430" name="Mall Entry" gid="2147483712" x="436" y="260" width="22" height="48"/>
+  <object id="2431" name="Apartment Entry" x="749.5" y="1218.5">
    <point/>
   </object>
  </objectgroup>

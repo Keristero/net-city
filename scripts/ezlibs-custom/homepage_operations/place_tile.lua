@@ -9,10 +9,12 @@ local function create_operation(hp,decoration_info)
 
     local function finish_placing()
         local temp_object_info = Net.get_object_by_id(hp.area_id, temporary_object_id)
-        Net.set_tile(hp.area_id, temp_object_info.x-1, temp_object_info.y-1, temp_object_info.z, temp_object_info.data.gid, temp_object_info.data.flipped_horizontally, temp_object_info.data.flipped_horizontally, temp_object_info.data.rotated)
+        local x = temp_object_info.x-1
+        local y = temp_object_info.y-1
+        local z = temp_object_info.z
+        hp:Replace_tile(temp_object_info.data.gid,x,y,z)
         Net.remove_object(hp.area_id, temporary_object_id)
         print('finished placing tile')
-        ezmemory.remove_player_item(hp.editor_id, decoration_info.name, 1)
         local object_count = ezmemory.count_player_item(hp.editor_id, decoration_info.name)
         local next_operation = nil
         if object_count > 0 then

@@ -29,15 +29,7 @@ local function create_operation(hp,removal_cursor_info)
                 local x = temp_object.x -1
                 local y = temp_object.y -1
                 local z = temp_object.z
-                local tile = Net.get_tile(hp.area_id, x, y, z)
-                print('tile',tile)
-                local decoration_info = home_page_decorations.gid[tonumber(tile.gid)]
-                print('decoration info',decoration_info)
-                if decoration_info then
-                    Net.set_tile(hp.area_id, x, y, z,0)
-                    local new_item_count = ezmemory.give_player_item(event.player_id, decoration_info.name, 1)
-                    print('DEBUG the player now has '..new_item_count)
-                end
+                hp:Replace_tile(0,x,y,z)
             end
         end,
         object_interact_func=function(event)
