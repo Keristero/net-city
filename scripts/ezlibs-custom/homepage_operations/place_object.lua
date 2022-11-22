@@ -15,7 +15,7 @@ local function create_operation(hp,decoration_info)
         ezmemory.remove_player_item(hp.editor_id, decoration_info.name, 1)
         local object_count = ezmemory.count_player_item(hp.editor_id, decoration_info.name)
         local next_operation = nil
-        hp:Prompt_for_custom_properties(new_object_id)
+        hp:Handle_object_placement(new_object_id)
         if object_count > 0 then
             --if the player still has more of this item, repeat the place operation
             next_operation = create_operation(hp,decoration_info)

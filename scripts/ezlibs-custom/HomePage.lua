@@ -21,9 +21,22 @@ local create_place_object_operation = require('scripts/ezlibs-custom/homepage_op
 local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_operations/place_tile')
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
 
-local custom_custom_property_prompts = {
-    
-}
+--[[ local page_warps = {}
+
+local function load_global_homepage_data()
+    local all_player_memory = ezmemory.get_all_player_memory()
+    for safe_secret, player_memory in pairs(all_player_memory) do
+        if player_memory.hp_page_warps then
+            for warp_secret_code, warp_object_id in pairs(player_memory.hp_page_warps) do
+                page_warps[warp_secret_code] = warp_object_id
+            end
+        else
+            player_memory.hp_page_warps = {}
+        end
+    end
+end
+
+load_global_homepage_data() ]]
 
 HomePage = {}
     
@@ -264,10 +277,21 @@ function HomePage:Handle_player_disconnect(event)
     end
 end
 
+function HomePage:Handle_object_placement(new_object_id)
+    return async(function()
+        await(self:Prompt_for_custom_properties(new_object_id))
+        local object = Net.get_object_by_id(self.area_id,new_object_id)
+        local hp_object_type = object.custom_properties["hp_object_type"]
+        if hp_object_type then
+            if hp_object_type == "page_warp" then
+                await(Async.message_player("Registering page warp..."))
+            end
+        end
+    end)
+end
+
 function HomePage:Handle_custom_warp(event)
-    print(event.player_id, event.object_id)
-    local player_area = Net.get_player_area(event.player_id)
-    local object = Net.get_object_by_id(player_area,event.object_id)
+    local object = Net.get_object_by_id(self.area_id,event.object_id)
     local hp_object_type = object.custom_properties["hp_object_type"]
     if hp_object_type == "city_warp" then
         --transfer player to their homepage
@@ -305,12 +329,37 @@ function HomePage:Prompt_for_custom_properties(object_id)
                 await(Async.message_player(self.editor_id, "Set " .. prop_name .. ":"))
                 if prop_value:sub(0,9) == "direction" then
                     new_value = await(self:Direction_prompt())
+                elseif prop_value:sub(0,4) == "bool" then
+                    new_value = await(Async.quiz_player(self.editor_id,"true","false"))
+                elseif prop_value:sub(0,6) == "friend" then
+                    new_value = await(self:Friend_prompt())
                 else
                     new_value = await(Async.prompt_player(self.editor_id,nil,default_value))
                 end
                 Net.set_object_custom_property(self.area_id, object_id, prop_name, new_value)
             end
         end
+    end)
+end
+
+function HomePage:Friend_prompt()
+    return async(function ()
+        local options = {}
+        local return_id = self.player_safe_secret
+        local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
+        table.insert(options,helpers.create_bbs_option("Self",self.player_safe_secret))
+        if player_memory.friends then
+            for friend_name, friend_safe_secret in pairs(player_memory.friends) do
+                table.insert(options,helpers.create_bbs_option(friend_name,friend_safe_secret))
+            end
+        end
+        local friend_menu = ezmenus.open_menu(self.editor_id,"Friend",direction_menu_color,options)
+        local post_id = await(friend_menu.selection_once())
+        await(friend_menu.close_async())
+        if post_id ~= nil then
+            return_id = post_id
+        end
+        return return_id
     end)
 end
 

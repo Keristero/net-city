@@ -131,10 +131,11 @@
   </object>
   <object id="33" name="PageWarp" class="Custom Warp" gid="33" x="513.5" y="480.5" width="61" height="32">
    <properties>
-    <property name="destination_name" value="string_prompt"/>
     <property name="direction" value="direction_prompt"/>
+    <property name="homepage" value="friend_prompt"/>
     <property name="hp_object_type" value="page_warp"/>
-    <property name="warp_name" value="string_prompt"/>
+    <property name="label" value="string_prompt"/>
+    <property name="linkable" value="bool_prompt"/>
    </properties>
   </object>
   <object id="34" class="Custom Warp" gid="33" x="829" y="801" width="61" height="32">
