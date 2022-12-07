@@ -94,6 +94,7 @@
    <properties>
     <property name="address" value="string_prompt"/>
     <property name="data" value="string_prompt"/>
+    <property name="data_default" value="from homepage"/>
     <property name="direction" value="direction_prompt"/>
     <property name="hp_object_type" value="server_warp"/>
     <property name="port" value="int_prompt"/>
