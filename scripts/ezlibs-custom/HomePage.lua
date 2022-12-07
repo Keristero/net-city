@@ -21,6 +21,7 @@ local create_place_object_operation = require('scripts/ezlibs-custom/homepage_op
 local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_operations/place_tile')
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
 
+
 --[[ local page_warps = {}
 
 local function load_global_homepage_data()
@@ -40,14 +41,13 @@ load_global_homepage_data() ]]
 
 HomePage = {}
     
-function HomePage:new(player_id)
+function HomePage:new(player_safe_secret)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
-    self.player_id = player_id
-    local home_page_id = helpers.get_safe_player_secret(player_id) --TODO change this to a hash of the player id
+    local home_page_id = player_safe_secret --TODO change this to a hash of the player id
     self.area_id = home_page_id
-    self.player_safe_secret =  helpers.get_safe_player_secret(player_id)
+    self.player_safe_secret =  player_safe_secret
     return o
 end
 
@@ -62,13 +62,25 @@ function HomePage:Initialize_from_memory()
     end
 end
 
+function HomePage:Register_unique_page_warp(object_id)
+    local base_hp_memory = ezmemory.get_area_memory(home_page_decorations.base_homepage_map_id)
+    --TODO this will eventually run out of codes and get stuck forever
+    local new_random_code_string = tostring(math.random(100000,999999))
+    while base_hp_memory.warp_codes[new_random_code_string] do
+        new_random_code_string = tostring(math.random(100000,999999))
+    end
+    base_hp_memory.warp_codes[new_random_code_string] = {area_id=self.area_id,object_id=object_id}
+    ezmemory.save_area_memory(home_page_decorations.base_homepage_map_id)
+    return new_random_code_string
+end
+
 function HomePage:Initialize_from_template(template_map)
     Net.clone_area(template_map, self.area_id)
-    local player_name_safe = urlencode.string(Net.get_player_name(self.player_id))
+    local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
     local new_area_name = player_name_safe.." HP"
     Net.set_area_name(self.area_id,new_area_name)
     self:Save()
-    print('generated new home page from base_homepage.tmx')
+    print('generated new home page from '..template_map)
 end
 
 function HomePage:Finish_editing_and_save()
@@ -282,9 +294,13 @@ function HomePage:Handle_object_placement(new_object_id)
         await(self:Prompt_for_custom_properties(new_object_id))
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         local hp_object_type = object.custom_properties["hp_object_type"]
+        print("placed a ",hp_object_type)
         if hp_object_type then
             if hp_object_type == "page_warp" then
-                await(Async.message_player("Registering page warp..."))
+                await(Async.message_player(self.editor_id,"Registering page warp..."))
+                local warp_code = self:Register_unique_page_warp(new_object_id)
+                Net.set_object_custom_property(self.area_id,new_object_id,'warp_code',warp_code)
+                await(Async.message_player(self.editor_id,"Warp data is:\n"..warp_code))
             end
         end
     end)
@@ -305,10 +321,14 @@ function HomePage:Handle_custom_warp(event)
     elseif hp_object_type == "server_warp" then
         local address = object.custom_properties["address"]
         local port = tonumber(object.custom_properties["port"])
+        local data = tonumber(object.custom_properties["data"])
         print(object.custom_properties)
         if address and port then
-            Net.transfer_server(event.player_id, address, port, true,"From Homepage")
+            Net.transfer_server(event.player_id, address, port, true,data)
         end
+    elseif hp_object_type == "page_warp" then
+        print(object.custom_properties)
+        --IMPLEMENT
     end
 end
 
@@ -339,27 +359,6 @@ function HomePage:Prompt_for_custom_properties(object_id)
                 Net.set_object_custom_property(self.area_id, object_id, prop_name, new_value)
             end
         end
-    end)
-end
-
-function HomePage:Friend_prompt()
-    return async(function ()
-        local options = {}
-        local return_id = self.player_safe_secret
-        local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
-        table.insert(options,helpers.create_bbs_option("Self",self.player_safe_secret))
-        if player_memory.friends then
-            for friend_name, friend_safe_secret in pairs(player_memory.friends) do
-                table.insert(options,helpers.create_bbs_option(friend_name,friend_safe_secret))
-            end
-        end
-        local friend_menu = ezmenus.open_menu(self.editor_id,"Friend",direction_menu_color,options)
-        local post_id = await(friend_menu.selection_once())
-        await(friend_menu.close_async())
-        if post_id ~= nil then
-            return_id = post_id
-        end
-        return return_id
     end)
 end
 
@@ -441,12 +440,18 @@ function HomePage:Scan_and_validate()
     return nil
 end
 
-function HomePage:Transfer_player(player_id)
-    --transfer player to their homepage
-    local x = self.home_warp_object.x+1
-    local y = self.home_warp_object.y+1
-    local z = self.home_warp_object.z
-    local direction = self.home_warp_object.custom_properties.direction
+function HomePage:Transfer_player(player_id,target_object_id)
+    --default to home page entry
+    local target_object = self.home_warp_object
+    if target_object_id then
+        --if an object_id is specified, warp to that
+        target_object = Net.get_object_by_id(self.area_id,target_object_id)
+    end
+    --transfer player to target object
+    local x = target_object.x+1
+    local y = target_object.y+1
+    local z = target_object.z
+    local direction = target_object.custom_properties.direction
     Net.transfer_player(player_id, self.area_id, true, x,y,z,direction)
 end
 

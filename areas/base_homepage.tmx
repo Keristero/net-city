@@ -93,6 +93,7 @@
   <object id="26" name="ServerWarp" class="Custom Warp" gid="22" x="456" y="552" width="58" height="30">
    <properties>
     <property name="address" value="string_prompt"/>
+    <property name="data" value="string_prompt"/>
     <property name="direction" value="direction_prompt"/>
     <property name="hp_object_type" value="server_warp"/>
     <property name="port" value="int_prompt"/>
@@ -132,10 +133,9 @@
   <object id="33" name="PageWarp" class="Custom Warp" gid="33" x="513.5" y="480.5" width="61" height="32">
    <properties>
     <property name="direction" value="direction_prompt"/>
-    <property name="homepage" value="friend_prompt"/>
     <property name="hp_object_type" value="page_warp"/>
-    <property name="label" value="string_prompt"/>
-    <property name="linkable" value="bool_prompt"/>
+    <property name="target_code" value="string_prompt"/>
+    <property name="warp_code" value=""/>
    </properties>
   </object>
   <object id="34" class="Custom Warp" gid="33" x="829" y="801" width="61" height="32">

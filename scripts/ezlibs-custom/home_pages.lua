@@ -5,10 +5,18 @@ local home_page_decorations = require("scripts/ezlibs-custom/home_page_decoratio
 local loaded_homepages_by_safe_secret = {}
 local loaded_homepages_by_area_id = {}
 
+
+--Load page warps
+local base_hp_memory = ezmemory.get_area_memory(home_page_decorations.base_homepage_map_id)
+
+if not base_hp_memory.warp_codes then
+    base_hp_memory.warp_codes = {}
+    ezmemory.save_area_memory(home_page_decorations.base_homepage_map_id)
+end
+
 --TODO
 --Dont use safe_secret for homepage area id, not safe :(
 --Allocate player home page apartment warps (random?)
---Allow selection of tiles / 
 
 local function get_homepage_of_player(player_id)
     local safe_secret = helpers.get_safe_player_secret(player_id)
@@ -16,7 +24,24 @@ local function get_homepage_of_player(player_id)
     if loaded_homepages_by_safe_secret[safe_secret] then
         return loaded_homepages_by_safe_secret[safe_secret]
     else
-        local homepage = HomePage:new(player_id)
+        local homepage = HomePage:new(safe_secret)
+        loaded_homepages_by_safe_secret[safe_secret] = homepage
+        loaded_homepages_by_area_id[homepage.area_id] = homepage
+        if player_memory.home_page_data then
+            homepage:Initialize_from_memory()
+        else
+            homepage:Initialize_from_template(home_page_decorations.base_homepage_map_id)
+        end
+        return homepage
+    end
+end
+
+local function get_homepage_by_safe_secret(safe_secret)
+    local player_memory = ezmemory.get_player_memory(safe_secret)
+    if loaded_homepages_by_safe_secret[safe_secret] then
+        return loaded_homepages_by_safe_secret[safe_secret]
+    else
+        local homepage = HomePage:new(safe_secret)
         loaded_homepages_by_safe_secret[safe_secret] = homepage
         loaded_homepages_by_area_id[homepage.area_id] = homepage
         if player_memory.home_page_data then
@@ -32,6 +57,11 @@ Net:on("player_request", function(event)
     if event.data == "" then
         local homepage = get_homepage_of_player(event.player_id)
         homepage:Transfer_player(event.player_id)
+    elseif base_hp_memory.warp_codes[event.data] then
+        --TODO right now the area id IS safe secret, change this later
+        local warp_code_info = base_hp_memory.warp_codes[event.data]
+        local homepage = get_homepage_by_safe_secret(warp_code_info.area_id)
+        homepage:Transfer_player(event.player_id,warp_code_info.object_id)
     end
 end)
 
