@@ -1,7 +1,7 @@
 local helpers = require('scripts/ezlibs-scripts/helpers')
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local urlencode = require('scripts/ezlibs-scripts/urlencode')
-local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
+local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 local ezmenus = require('scripts/ezlibs-scripts/ezmenus')
 local Direction = require("scripts/ezlibs-scripts/direction")
 
@@ -63,15 +63,21 @@ function HomePage:Initialize_from_memory()
 end
 
 function HomePage:Register_unique_page_warp(object_id)
-    local base_hp_memory = ezmemory.get_area_memory(home_page_decorations.base_homepage_map_id)
     --TODO this will eventually run out of codes and get stuck forever
     local new_random_code_string = tostring(math.random(100000,999999))
-    while base_hp_memory.warp_codes[new_random_code_string] do
+    while home_page_helpers.homepage_map_memory.warp_codes[new_random_code_string] do
         new_random_code_string = tostring(math.random(100000,999999))
     end
-    base_hp_memory.warp_codes[new_random_code_string] = {area_id=self.area_id,object_id=object_id}
-    ezmemory.save_area_memory(home_page_decorations.base_homepage_map_id)
+    home_page_helpers.homepage_map_memory.warp_codes[new_random_code_string] = {area_id=self.area_id,object_id=object_id}
+    ezmemory.save_area_memory(home_page_helpers.base_homepage_map_id)
     return new_random_code_string
+end
+
+function HomePage:Remove_unique_page_warp(object)
+    --TODO this will eventually run out of codes and get stuck forever
+    local code_to_remove = object.custom_properties.warp_code
+    home_page_helpers.homepage_map_memory.warp_codes[code_to_remove] = nil
+    ezmemory.save_area_memory(home_page_helpers.base_homepage_map_id)
 end
 
 function HomePage:Initialize_from_template(template_map)
@@ -183,15 +189,15 @@ function HomePage:Open_menu(player_id)
         elseif post_id == "Store Objects" then
             self:Set_current_operation(create_store_object_operation(self))
         elseif post_id == "Store Tiles" then
-            local removal_cursor_info = home_page_decorations.gid[home_page_decorations.name_to_gid["RemovalCursor"]]
+            local removal_cursor_info = home_page_helpers.gid[home_page_helpers.name_to_gid["RemovalCursor"]]
             self:Set_current_operation(create_store_tile_operation(self,removal_cursor_info))
         elseif post_id == "Place Tiles" then
-            local decoration_info = await(self:Storage_menu_async_selection(home_page_decorations.tiles))
+            local decoration_info = await(self:Storage_menu_async_selection(home_page_helpers.tiles))
             if decoration_info then
                 self:Set_current_operation(create_place_tile_operation(self,decoration_info))
             end
         elseif post_id == "Place Objects" then
-            local decoration_info = await(self:Storage_menu_async_selection(home_page_decorations.objects))
+            local decoration_info = await(self:Storage_menu_async_selection(home_page_helpers.objects))
             if decoration_info then
                 self:Set_current_operation(create_place_object_operation(self,decoration_info))
             end
@@ -228,7 +234,7 @@ function HomePage:Storage_menu_async_selection(decoration_collection)
             return nil
         end
         local place_object_gid = tonumber(post_id)
-        local decoration_info = home_page_decorations.gid[place_object_gid]
+        local decoration_info = home_page_helpers.gid[place_object_gid]
         print('selected gid=',place_object_gid)
         await(menu.close_async())
         return decoration_info
@@ -236,9 +242,9 @@ function HomePage:Storage_menu_async_selection(decoration_collection)
 end
 
 function HomePage:Replace_tile(new_tile_gid,x,y,z,flipped_h,flipped_v,rotated)
-    local new_tile_info = home_page_decorations.gid[tonumber(new_tile_gid)]
+    local new_tile_info = home_page_helpers.gid[tonumber(new_tile_gid)]
     local existing_tile = Net.get_tile(self.area_id, x, y, z)
-    local existing_decoration_info = home_page_decorations.gid[tonumber(existing_tile.gid)]
+    local existing_decoration_info = home_page_helpers.gid[tonumber(existing_tile.gid)]
     if tonumber(existing_tile.gid) == tonumber(new_tile_gid) then
         return
     end
@@ -327,15 +333,16 @@ function HomePage:Handle_custom_warp(event)
             Net.transfer_server(event.player_id, address, port, true,data)
         end
     elseif hp_object_type == "page_warp" then
-        print(object.custom_properties)
-        --IMPLEMENT
+        local target_code = object.custom_properties["target_code"]
+        print('page warp to',target_code)
+        home_page_helpers.transfer_player_to_correct_homepage(event.player_id,target_code)
     end
 end
 
 function HomePage:Prompt_for_custom_properties(object_id)
     return async(function ()
         local object = Net.get_object_by_id(self.area_id,object_id)
-        local decoration_info = home_page_decorations.objects[object.data.gid]
+        local decoration_info = home_page_helpers.objects[object.data.gid]
         for prop_name, prop_value in pairs(decoration_info.custom_properties) do
             if prop_value:sub(-7) == "_prompt" then
                 local default_value = ""

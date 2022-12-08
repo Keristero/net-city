@@ -1,4 +1,4 @@
-local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
+local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 
 local function create_operation(hp)
@@ -14,11 +14,14 @@ local function create_operation(hp)
             local A_press = event.button == 0
             if A_press then
                 local object = Net.get_object_by_id(hp.area_id,event.object_id)
-                local decoration_info = home_page_decorations.gid[object.data.gid]
+                local decoration_info = home_page_helpers.gid[object.data.gid]
                 if decoration_info then
                     Net.remove_object(hp.area_id, event.object_id)
                     local new_item_count = ezmemory.give_player_item(event.player_id, decoration_info.name, 1)
                     print('DEBUG the player now has '..new_item_count)
+                    if object.custom_properties["hp_object_type"] == "page_warp" then
+                        hp:Remove_unique_page_warp(object)
+                    end
                 end
             end
         end,

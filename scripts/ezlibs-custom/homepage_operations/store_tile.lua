@@ -1,9 +1,9 @@
-local home_page_decorations = require("scripts/ezlibs-custom/home_page_decorations")
+local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local Direction = require("scripts/ezlibs-scripts/direction")
 
 local function create_operation(hp,removal_cursor_info)
-    local temporary_object_id = home_page_decorations.create_object_from_gid(hp.area_id, removal_cursor_info.gid, 0,0,0)
+    local temporary_object_id = home_page_helpers.create_object_from_gid(hp.area_id, removal_cursor_info.gid, 0,0,0)
     return {
         name="store tile",
         tic_func=function()
