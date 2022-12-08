@@ -20,6 +20,7 @@ local create_store_object_operation = require('scripts/ezlibs-custom/homepage_op
 local create_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
 local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_operations/place_tile')
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
+local create_configure_object_operation = require('scripts/ezlibs-custom/homepage_operations/configure_object')
 
 
 --[[ local page_warps = {}
@@ -168,6 +169,7 @@ function HomePage:Open_menu(player_id)
             table.insert(posts, helpers.create_bbs_option("Place Tiles"))
             table.insert(posts, helpers.create_bbs_option("Store Objects"))
             table.insert(posts, helpers.create_bbs_option("Store Tiles"))
+            table.insert(posts, helpers.create_bbs_option("Configure Objects"))
             table.insert(posts, helpers.create_bbs_option("Save Changes"))
             table.insert(posts, helpers.create_bbs_option("Discard Changes"))
         else
@@ -201,6 +203,8 @@ function HomePage:Open_menu(player_id)
             if decoration_info then
                 self:Set_current_operation(create_place_object_operation(self,decoration_info))
             end
+        elseif post_id == "Configure Objects" then
+            self:Set_current_operation(create_configure_object_operation(self))
         end
     end)
 end
@@ -295,18 +299,20 @@ function HomePage:Handle_player_disconnect(event)
     end
 end
 
-function HomePage:Handle_object_placement(new_object_id)
+function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
     return async(function()
         await(self:Prompt_for_custom_properties(new_object_id))
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         local hp_object_type = object.custom_properties["hp_object_type"]
         print("placed a ",hp_object_type)
-        if hp_object_type then
-            if hp_object_type == "page_warp" then
-                await(Async.message_player(self.editor_id,"Registering page warp..."))
-                local warp_code = self:Register_unique_page_warp(new_object_id)
-                Net.set_object_custom_property(self.area_id,new_object_id,'warp_code',warp_code)
-                await(Async.message_player(self.editor_id,"Warp data is:\n"..warp_code))
+        if not is_reconfigure then
+            if hp_object_type then
+                if hp_object_type == "page_warp" then
+                    await(Async.message_player(self.editor_id,"Registering page warp..."))
+                    local warp_code = self:Register_unique_page_warp(new_object_id)
+                    Net.set_object_custom_property(self.area_id,new_object_id,'warp_code',warp_code)
+                    await(Async.message_player(self.editor_id,"Warp data is:\n"..warp_code))
+                end
             end
         end
     end)
@@ -324,6 +330,7 @@ function HomePage:Handle_custom_warp(event)
         local direction = exit_object.custom_properties.direction
         Net.transfer_player(event.player_id, net_city_map_id, true, x,y,z,direction)
         self:Cancel_editing()
+        return
     elseif hp_object_type == "server_warp" then
         local address = object.custom_properties["address"]
         local port = tonumber(object.custom_properties["port"])
@@ -332,11 +339,15 @@ function HomePage:Handle_custom_warp(event)
         if address and port then
             Net.transfer_server(event.player_id, address, port, true,data)
         end
+        return
     elseif hp_object_type == "page_warp" then
         local target_code = object.custom_properties["target_code"]
         print('page warp to',target_code)
         home_page_helpers.transfer_player_to_correct_homepage(event.player_id,target_code)
+        return
     end
+    --Or default back to warping the player to their entrance
+    home_page_helpers.transfer_player_to_correct_homepage(event.player_id)
 end
 
 function HomePage:Prompt_for_custom_properties(object_id)
