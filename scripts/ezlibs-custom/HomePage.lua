@@ -43,13 +43,12 @@ load_global_homepage_data() ]]
 HomePage = {}
     
 function HomePage:new(player_safe_secret)
-    o = o or {}
-    setmetatable(o, self)
-    self.__index = self
+    local o = {}
     local home_page_id = player_safe_secret --TODO change this to a hash of the player id
-    self.area_id = home_page_id
-    self.player_safe_secret =  player_safe_secret
-    return o
+    o.area_id = home_page_id
+    o.player_safe_secret =  player_safe_secret
+    self.__index = self
+    return setmetatable(o, self)
 end
 
 function HomePage:Initialize_from_memory()
@@ -322,7 +321,7 @@ function HomePage:Handle_custom_warp(event)
     local object = Net.get_object_by_id(self.area_id,event.object_id)
     local hp_object_type = object.custom_properties["hp_object_type"]
     if hp_object_type == "city_warp" then
-        --transfer player to their homepage
+        --transfer player to net city
         local exit_object = Net.get_object_by_id(net_city_map_id,test_net_city_homepage_exit_id)
         local x = exit_object.x
         local y = exit_object.y
