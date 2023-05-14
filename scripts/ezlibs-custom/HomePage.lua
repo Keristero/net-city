@@ -362,7 +362,7 @@ function HomePage:Handle_custom_warp(event)
     elseif hp_object_type == "server_warp" then
         local address = object.custom_properties["address"]
         local port = tonumber(object.custom_properties["port"])
-        local data = tonumber(object.custom_properties["data"])
+        local data = object.custom_properties["data"]
         if address and port then
             Net.transfer_server(event.player_id, address, port, true,data)
         end
