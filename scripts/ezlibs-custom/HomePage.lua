@@ -319,7 +319,7 @@ function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
         local hp_object_type = object.custom_properties["hp_object_type"]
         if not is_reconfigure then
             if hp_object_type then
-                if hp_object_type == "page_warp" then
+                if hp_object_type == "page_warp" or hp_object_type == "server_warp" then
                     await(Async.message_player(self.editor_id,"Registering page warp..."))
                     local warp_code = self:Register_unique_page_warp(new_object_id)
                     Net.set_object_custom_property(self.area_id,new_object_id,'warp_code',warp_code)

@@ -107,6 +107,7 @@
     <property name="hp_object_type" value="server_warp"/>
     <property name="port" value="int_prompt"/>
     <property name="port_default" value="8765"/>
+    <property name="warp_code" value=""/>
    </properties>
   </object>
   <object id="28" name="MeTTaUrSpWnr" gid="27" x="512" y="544" width="18" height="19"/>

@@ -20,7 +20,8 @@ local function create_operation(hp)
                     Net.remove_object(hp.area_id, event.object_id)
                     local new_item_count = ezmemory.give_player_item(event.player_id, decoration_info.name, 1)
                     print('DEBUG the player now has '..new_item_count)
-                    if object.custom_properties["hp_object_type"] == "page_warp" then
+                    local hp_object_type = object.custom_properties["hp_object_type"]
+                    if hp_object_type == "page_warp" or hp_object_type == "server_warp" then
                         hp:Remove_unique_page_warp(object)
                     end
                 end
