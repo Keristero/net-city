@@ -29,10 +29,12 @@ local function load_home_page_helpers()
         objects = Net.list_objects(home_page_helpers.base_homepage_map_id)
         for index, object_id in ipairs(objects) do
             local object = Net.get_object_by_id(home_page_helpers.base_homepage_map_id, object_id)
+            local first_gid = home_page_helpers.get_objects_first_gid(object)
             if object.name ~= "" then
                 local new_item_id = ezmemory.create_or_update_item(object.name,"",false)
                 local decoration_info = {
-                    gid= object.data.gid,
+                    gid= first_gid,
+                    default_gid = object.data.gid,
                     name = object.name,
                     class = object.class,
                     custom_properties = object.custom_properties,
@@ -40,20 +42,25 @@ local function load_home_page_helpers()
                     width = object.width,
                     height = object.height
                 }
-                home_page_helpers.gid[object.data.gid] = decoration_info
-                home_page_helpers.name_to_gid[object.name] = object.data.gid
+                home_page_helpers.gid[first_gid] = decoration_info
+                home_page_helpers.name_to_gid[object.name] = first_gid
                 --also save the decorations to a list of tiles and objects
                 if object.custom_properties.is_tile == "true" then
-                    home_page_helpers.tiles[object.data.gid] = decoration_info
-                    print("[home_page_decorations] Found tile decoration: " .. object.name.. " (" .. object.data.gid..")")
+                    home_page_helpers.tiles[first_gid] = decoration_info
+                    print("[home_page_decorations] Found tile decoration: " .. object.name.. " (" .. first_gid..")")
                 else
-                    home_page_helpers.objects[object.data.gid] = decoration_info
-                    print("[home_page_decorations] Found object decoration: " .. object.name.. " (" .. object.data.gid..")")
+                    home_page_helpers.objects[first_gid] = decoration_info
+                    print("[home_page_decorations] Found object decoration: " .. object.name.. " (" .. first_gid..")")
                 end
                 Net.remove_object(home_page_helpers.base_homepage_map_id, object_id)
             end
         end
     end)
+end
+
+home_page_helpers.get_objects_first_gid = function(object)
+    local tileset = Net.get_tileset_for_tile(home_page_helpers.base_homepage_map_id, object.data.gid)
+    return tileset.first_gid
 end
 
 home_page_helpers.create_object_from_gid = function(area_id, object_gid, x, y, z)
@@ -70,7 +77,7 @@ home_page_helpers.create_object_from_gid = function(area_id, object_gid, x, y, z
         rotation=0,
         data={
             type = "tile",
-            gid = object_gid,
+            gid = decoration_info.default_gid,
             flipped_horizontally = false,
             flipped_vertically = false,
             rotated = false
@@ -121,6 +128,9 @@ home_page_helpers.transfer_player_to_correct_homepage = function (player_id,requ
     if request_data == "" or request_data == nil then
         local homepage = home_page_helpers.get_homepage_of_player(player_id)
         homepage:Transfer_player(player_id)
+    elseif request_data == "FromNetCity" then
+        local homepage = home_page_helpers.get_homepage_of_player(player_id)
+        homepage:Transfer_player(player_id,homepage.city_warp_object.id)
     elseif home_page_helpers.homepage_map_memory.warp_codes[request_data] then
         --TODO right now the area id IS safe secret, change this later
         local warp_code_info = home_page_helpers.homepage_map_memory.warp_codes[request_data]

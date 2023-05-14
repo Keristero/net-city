@@ -8,6 +8,10 @@ local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 --Allocate player home page apartment warps (random?)
 
 Net:on("player_request", function(event)
+    if not ezmemory.is_loaded() then
+        Net.kick_player(event.player_id, "Scripts still loading, try again", false)
+        return
+    end
     home_page_helpers.transfer_player_to_correct_homepage(event.player_id,event.data)
 end)
 
@@ -34,6 +38,11 @@ end)
 
 Net:on("object_interaction", function(event)
     local area_id = Net.get_player_area(event.player_id)
+    local object = Net.get_object_by_id(area_id,event.object_id)
+    if object.class == "Homepage Warp" then
+        home_page_helpers.transfer_player_to_correct_homepage(event.player_id,"FromNetCity")
+        return
+    end
     if home_page_helpers.loaded_homepages_by_area_id[area_id] then
         home_page_helpers.loaded_homepages_by_area_id[area_id]:Handle_object_interaction(event)
     end

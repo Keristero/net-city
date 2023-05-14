@@ -14,7 +14,8 @@ local function create_operation(hp)
             local A_press = event.button == 0
             if A_press then
                 local object = Net.get_object_by_id(hp.area_id,event.object_id)
-                local decoration_info = home_page_helpers.gid[object.data.gid]
+                local first_gid = home_page_helpers.get_objects_first_gid(object)
+                local decoration_info = home_page_helpers.gid[first_gid]
                 if decoration_info then
                     Net.remove_object(hp.area_id, event.object_id)
                     local new_item_count = ezmemory.give_player_item(event.player_id, decoration_info.name, 1)

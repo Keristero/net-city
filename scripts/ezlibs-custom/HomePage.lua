@@ -21,6 +21,7 @@ local create_place_object_operation = require('scripts/ezlibs-custom/homepage_op
 local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_operations/place_tile')
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
 local create_configure_object_operation = require('scripts/ezlibs-custom/homepage_operations/configure_object')
+local create_inspect_object_operation = require('scripts/ezlibs-custom/homepage_operations/inspect_object')
 
 
 --[[ local page_warps = {}
@@ -56,7 +57,7 @@ function HomePage:Initialize_from_memory()
     Net.update_area(self.area_id, player_memory.home_page_data)
     local validation_error = self:Scan_and_validate()
     if validation_error == nil then
-        print('loaded home page from memory')
+        --print('loaded home page from memory')
     else
         error('corrupt home page data for '..self.player_safe_secret..' error= '..validation_error)
     end
@@ -86,13 +87,13 @@ function HomePage:Initialize_from_template(template_map)
     local new_area_name = player_name_safe.." HP"
     Net.set_area_name(self.area_id,new_area_name)
     self:Save()
-    print('generated new home page from '..template_map)
 end
 
 function HomePage:Finish_editing_and_save()
     local editor_id = self.editor_id
     self:Cancel_current_operation()
     self:Finish_editing()
+    self:Refresh_page_elements()
     self:Save(editor_id)
 end
 
@@ -104,18 +105,28 @@ function HomePage:Set_current_operation(operation)
 end
 
 function HomePage:Enable_class(object_id)
-    local object_info = Net.get_object_by_id(self.area_id, object_id)
-    if object_info.class:sub(-8) == "DISABLED" then
-        Net.set_object_class(self.area_id, object_id, object_info.class:sub(0,#object_info.class-8))
-        print("Re Enabled ",object_info.class)
+    local object = Net.get_object_by_id(self.area_id, object_id)
+    if object.class:sub(-8) == "DISABLED" then
+        Net.set_object_class(self.area_id, object_id, object.class:sub(0,#object.class-8))
+        if object.custom_properties["enabled_frame_index"] then
+            local tileset = Net.get_tileset_for_tile(self.area_id, object.data.gid)
+            local first_gid = tileset.first_gid
+            object.data.gid = first_gid+tonumber(object.custom_properties["enabled_frame_index"])
+            Net.set_object_data(self.area_id, object_id, object.data)
+        end
     end
 end
 
 function HomePage:Disable_class(object_id)
-    local object_info = Net.get_object_by_id(self.area_id, object_id)
-    if helpers.indexOf(classes_to_disable, object_info.class) ~= nil then
-        Net.set_object_class(self.area_id, object_id, object_info.class.."DISABLED")
-        print("disabled ",object_info.class)
+    local object = Net.get_object_by_id(self.area_id, object_id)
+    if helpers.indexOf(classes_to_disable, object.class) ~= nil then
+        Net.set_object_class(self.area_id, object_id, object.class.."DISABLED")
+        if object.custom_properties["disabled_frame_index"] then
+            local tileset = Net.get_tileset_for_tile(self.area_id, object.data.gid)
+            local first_gid = tileset.first_gid
+            object.data.gid = first_gid+tonumber(object.custom_properties["disabled_frame_index"])
+            Net.set_object_data(self.area_id, object_id, object.data)
+        end
     end
 end
 
@@ -142,6 +153,7 @@ function HomePage:Cancel_editing()
     self:Cancel_current_operation()
     self:Finish_editing()
     self:Initialize_from_memory()
+    self:Refresh_page_elements()
     if self.player_memory_backup then
         ezmemory.dangerously_override_player_memory(self.player_safe_secret, self.player_memory_backup)
         self.player_memory_backup = nil
@@ -171,6 +183,7 @@ function HomePage:Open_menu(player_id)
             table.insert(posts, helpers.create_bbs_option("Configure Objects"))
             table.insert(posts, helpers.create_bbs_option("Save Changes"))
             table.insert(posts, helpers.create_bbs_option("Discard Changes"))
+            table.insert(posts, helpers.create_bbs_option("Inspect Objects"))
         else
             table.insert(posts, helpers.create_bbs_option("Edit Homepage"))
         end
@@ -204,6 +217,8 @@ function HomePage:Open_menu(player_id)
             end
         elseif post_id == "Configure Objects" then
             self:Set_current_operation(create_configure_object_operation(self))
+        elseif post_id == "Inspect Objects" then
+            self:Set_current_operation(create_inspect_object_operation(self))
         end
     end)
 end
@@ -238,7 +253,6 @@ function HomePage:Storage_menu_async_selection(decoration_collection)
         end
         local place_object_gid = tonumber(post_id)
         local decoration_info = home_page_helpers.gid[place_object_gid]
-        print('selected gid=',place_object_gid)
         await(menu.close_async())
         return decoration_info
     end)
@@ -303,7 +317,6 @@ function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
         await(self:Prompt_for_custom_properties(new_object_id))
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         local hp_object_type = object.custom_properties["hp_object_type"]
-        print("placed a ",hp_object_type)
         if not is_reconfigure then
             if hp_object_type then
                 if hp_object_type == "page_warp" then
@@ -313,6 +326,22 @@ function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
                     await(Async.message_player(self.editor_id,"Warp data is:\n"..warp_code))
                 end
             end
+        end
+    end)
+end
+
+function HomePage:List_object_properties_to_player(new_object_id)
+    return async(function()
+        local object = Net.get_object_by_id(self.area_id,new_object_id)
+        for prop_name, prop_value in pairs(object.custom_properties) do
+            if prop_name == "hp_object_type" or prop_name == "disabled_frame_index" or prop_name == "enabled_frame_index" then
+                goto continue
+            end
+            if object.custom_properties[prop_name.."_default"] then
+                goto continue
+            end
+            await(Async.message_player(self.editor_id,prop_name.."="..prop_value))
+            ::continue::
         end
     end)
 end
@@ -334,14 +363,12 @@ function HomePage:Handle_custom_warp(event)
         local address = object.custom_properties["address"]
         local port = tonumber(object.custom_properties["port"])
         local data = tonumber(object.custom_properties["data"])
-        print(object.custom_properties)
         if address and port then
             Net.transfer_server(event.player_id, address, port, true,data)
         end
         return
     elseif hp_object_type == "page_warp" then
         local target_code = object.custom_properties["target_code"]
-        print('page warp to',target_code)
         home_page_helpers.transfer_player_to_correct_homepage(event.player_id,target_code)
         return
     end
@@ -401,8 +428,10 @@ end
 
 function HomePage:Handle_object_interaction(event)
     local L_press = event.button == 1
+    local A_press = event.button == 0
     if L_press then
         self:Try_open_menu(event)
+        return
     end
 
     if self.current_operation then
@@ -411,6 +440,26 @@ function HomePage:Handle_object_interaction(event)
             return
         end
     end
+
+    if A_press then
+        self:Async_object_interaction(event)
+        return
+    end
+end
+
+function HomePage:Async_object_interaction(event)
+    return async(function ()
+        local object = Net.get_object_by_id(self.area_id,event.object_id)
+        if object.custom_properties["hp_object_type"] then
+            local hp_object_type = object.custom_properties["hp_object_type"]
+            if hp_object_type == "flavour_text" then
+                local text = object.custom_properties["text"]
+                if text ~= "" then
+                    await(Async.message_player(event.player_id,object.custom_properties["text"]))
+                end
+            end
+        end
+    end)
 end
 
 function HomePage:Handle_tick(event)
@@ -431,11 +480,37 @@ function HomePage:Save(last_editor_id)
     end
 end
 
+function HomePage:Refresh_page_elements()
+    if self.editor_id ~= nil then
+        --Dont refresh the page while it is being edited
+        return
+    end
+    local object_ids = Net.list_objects(self.area_id)
+    for index, object_id in ipairs(object_ids) do
+        local object = Net.get_object_by_id(self.area_id, object_id)
+        if object.custom_properties["hp_object_type"] then
+            if object.custom_properties["hp_object_type"] == "page_warp" then
+                local target_code = object.custom_properties["target_code"]
+                local warp_is_online = false
+                if target_code ~= nil then
+                    if home_page_helpers.homepage_map_memory.warp_codes[target_code] then
+                        warp_is_online = true
+                    end
+                end
+                if warp_is_online then
+                    self:Enable_class(object_id)
+                else
+                    self:Disable_class(object_id)
+                end
+            end
+        end
+    end
+end
+
 function HomePage:Scan_and_validate()
     --parses the homepage to extract all the key objects used
     self.home_warp_object = nil
     self.city_warp_object = nil
-    print('scanning and validating')
     local object_ids = Net.list_objects(self.area_id)
     for index, object_id in ipairs(object_ids) do
         local object = Net.get_object_by_id(self.area_id, object_id)
@@ -469,6 +544,7 @@ function HomePage:Transfer_player(player_id,target_object_id)
     local y = target_object.y+1
     local z = target_object.z
     local direction = target_object.custom_properties.direction
+    self:Refresh_page_elements()--Refresh the page before transfering a player in
     Net.transfer_player(player_id, self.area_id, true, x,y,z,direction)
 end
 

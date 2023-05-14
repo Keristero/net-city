@@ -3,7 +3,7 @@ local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 
 local function create_operation(hp)
     return {
-        name="store object",
+        name="inspect object",
         tic_func=function()
             return nil
         end,
@@ -17,7 +17,7 @@ local function create_operation(hp)
                 local first_gid = home_page_helpers.get_objects_first_gid(object)
                 local decoration_info = home_page_helpers.gid[first_gid]
                 if decoration_info then
-                    hp:Handle_object_placement(event.object_id,true)
+                    hp:List_object_properties_to_player(event.object_id)
                 end
             end
         end,
