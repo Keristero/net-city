@@ -91,20 +91,7 @@ end
 
 home_page_helpers.get_homepage_of_player = function(player_id)
     local safe_secret = helpers.get_safe_player_secret(player_id)
-    local player_memory = ezmemory.get_player_memory(safe_secret)
-    if home_page_helpers.loaded_homepages_by_safe_secret[safe_secret] then
-        return home_page_helpers.loaded_homepages_by_safe_secret[safe_secret]
-    else
-        local homepage = HomePage:new(safe_secret)
-        home_page_helpers.loaded_homepages_by_safe_secret[safe_secret] = homepage
-        home_page_helpers.loaded_homepages_by_area_id[homepage.area_id] = homepage
-        if player_memory.home_page_data then
-            homepage:Initialize_from_memory()
-        else
-            homepage:Initialize_from_template(home_page_helpers.base_homepage_map_id)
-        end
-        return homepage
-    end
+    return home_page_helpers.get_homepage_by_safe_secret(safe_secret)
 end
 
 home_page_helpers.get_homepage_by_safe_secret = function(safe_secret)

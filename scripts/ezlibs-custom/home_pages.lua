@@ -8,10 +8,9 @@ local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 --Allocate player home page apartment warps (random?)
 
 Net:on("player_request", function(event)
---[[     if not ezmemory.is_loaded() then
-        Net.kick_player(event.player_id, "Scripts still loading, try again", false)
-        return
-    end ]]
+    local safe_secret = helpers.get_safe_player_secret(event.player_id)
+    local player_name = Net.get_player_name(event.player_id)
+    ezmemory.update_player_list(safe_secret,player_name)
     home_page_helpers.transfer_player_to_correct_homepage(event.player_id,event.data)
 end)
 
