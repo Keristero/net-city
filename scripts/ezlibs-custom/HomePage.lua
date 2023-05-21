@@ -57,6 +57,7 @@ function HomePage:Initialize_from_memory()
     Net.update_area(self.area_id, player_memory.home_page_data)
     local validation_error = self:Scan_and_validate()
     if validation_error == nil then
+        self:Upgrade(home_page_helpers.base_homepage_map_id)
         --print('loaded home page from memory')
     else
         error('corrupt home page data for '..self.player_safe_secret..' error= '..validation_error)
@@ -87,6 +88,23 @@ function HomePage:Initialize_from_template(template_map)
     local new_area_name = player_name_safe.." HP"
     Net.set_area_name(self.area_id,new_area_name)
     self:Save()
+end
+
+function HomePage:Upgrade(template_map)
+    print("[Homepage] checking if HP needs upgrade")
+    --deep copy player memory so that we can restore it if they decide to cancel their edits
+    local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
+    self.player_memory_backup = helpers.deep_copy(player_memory)
+    
+    local latest_tilesets = Net.list_tilesets(template_map)
+    local current_tilesets = Net.list_tilesets(self.area_id)
+    if #current_tilesets ~= #latest_tilesets then
+        print("[Homepage] starting HP upgrade")
+        local latest_hp = Net.map_to_string(home_page_helpers.base_homepage_map_id)
+        player_memory.home_page_data = home_page_helpers.upgrade_homepage_xml(player_memory.home_page_data,latest_hp)
+        ezmemory.save_player_memory(self.player_safe_secret)
+        Net.update_area(self.area_id, player_memory.home_page_data)
+    end
 end
 
 function HomePage:Finish_editing_and_save()
@@ -379,7 +397,9 @@ end
 function HomePage:Prompt_for_custom_properties(object_id)
     return async(function ()
         local object = Net.get_object_by_id(self.area_id,object_id)
-        local decoration_info = home_page_helpers.objects[object.data.gid]
+        local tileset = Net.get_tileset_for_tile(self.area_id, object.data.gid)
+        local first_gid = tileset.first_gid
+        local decoration_info = home_page_helpers.objects[first_gid]
         for prop_name, prop_value in pairs(decoration_info.custom_properties) do
             if prop_value:sub(-7) == "_prompt" then
                 local default_value = ""
@@ -475,6 +495,7 @@ function HomePage:Save(last_editor_id)
         player_memory.home_page_data = Net.map_to_string(self.area_id)
         ezmemory.save_player_memory(self.player_safe_secret)
     else
+        error("[Homepage] validation error saivng homepage with no last_editor_id!")
         self:Start_editing(last_editor_id)
         Net.message_player(last_editor_id, "Error saving homepage, resolve the following before saving again : "..self.valitation_error)
     end

@@ -2,6 +2,8 @@
 
 local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local helpers = require('scripts/ezlibs-scripts/helpers')
+local xml2lua = require("scripts/ezlibs-custom/xml2lua")
+local tree_handler = require("scripts/ezlibs-custom/xml2luatreehandler")
 
 local home_page_helpers = {}
 home_page_helpers.base_homepage_map_id = 'base_homepage'
@@ -42,6 +44,7 @@ local function load_home_page_helpers()
                     width = object.width,
                     height = object.height
                 }
+                print(decoration_info)
                 home_page_helpers.gid[first_gid] = decoration_info
                 home_page_helpers.name_to_gid[object.name] = first_gid
                 --also save the decorations to a list of tiles and objects
@@ -124,6 +127,19 @@ home_page_helpers.transfer_player_to_correct_homepage = function (player_id,requ
         local homepage = home_page_helpers.get_homepage_by_safe_secret(warp_code_info.area_id)
         homepage:Transfer_player(player_id,warp_code_info.object_id)
     end
+end
+
+home_page_helpers.upgrade_homepage_xml = function (old_xml_str,new_xml_str)
+    local parser = xml2lua.parser(tree_handler)
+    parser:parse(old_xml_str)
+    parser:parse(new_xml_str)
+    local old_tilesets = tree_handler.root.map[1].tileset
+    local new_tilesets = tree_handler.root.map[2].tileset
+    print('old tilesets = ',old_tilesets)
+    print('new tilesets = ',new_tilesets)
+    --overwrite old tilesets
+    tree_handler.root.map[1].tileset = tree_handler.root.map[2].tileset
+    return xml2lua.toXml(tree_handler.root,nil)
 end
 
 load_home_page_helpers()
