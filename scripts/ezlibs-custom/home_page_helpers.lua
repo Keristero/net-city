@@ -19,7 +19,7 @@ local objects = {}
 local function load_home_page_helpers()
     async(function ()
         --Janky work around to wait until area memory has been loaded by ezmemory
-        await(Async.sleep(0.5))
+        await(ezmemory.wait_until_loaded())
         --Load page warps
         home_page_helpers.homepage_map_memory = ezmemory.get_area_memory(home_page_helpers.base_homepage_map_id)
 
