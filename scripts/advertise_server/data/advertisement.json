@@ -1,0 +1,18 @@
+{
+    "listservers":{
+        "main":"https://www.keristero.xyz/server_list/"
+    },
+    "advertisements":[
+        {
+            "unique_server_id":"net_city",
+            "name":"Net City (beta)",
+            "description":"Hang out and build your own homepage",
+            "tags":["social"],
+            "address":"keristero.xyz:8766",
+            "data":"",
+            "icon":"netcity.png",
+            "color":"rgb(40,100,255)",
+            "advertise_map":true
+        }
+    ]
+}
