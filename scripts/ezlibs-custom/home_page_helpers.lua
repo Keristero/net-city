@@ -130,16 +130,19 @@ home_page_helpers.transfer_player_to_correct_homepage = function (player_id,requ
 end
 
 home_page_helpers.upgrade_homepage_xml = function (old_xml_str,new_xml_str)
-    local parser = xml2lua.parser(tree_handler)
-    parser:parse(old_xml_str)
-    parser:parse(new_xml_str)
-    local old_tilesets = tree_handler.root.map[1].tileset
-    local new_tilesets = tree_handler.root.map[2].tileset
+    local handler1 = tree_handler:new()
+    local handler2 = tree_handler:new()
+    local parser1 = xml2lua.parser(handler1)
+    local parser2 = xml2lua.parser(handler2)
+    parser1:parse(old_xml_str)
+    parser2:parse(new_xml_str)
+    local old_tilesets = handler1.root.map.tileset
+    local new_tilesets = handler2.root.map.tileset
     print('old tilesets = ',old_tilesets)
     print('new tilesets = ',new_tilesets)
     --overwrite old tilesets
-    tree_handler.root.map[1].tileset = tree_handler.root.map[2].tileset
-    return xml2lua.toXml(tree_handler.root,nil)
+    handler1.root.map.tileset = handler2.root.map.tileset
+    return xml2lua.toXml(handler1.root,nil)
 end
 
 load_home_page_helpers()
