@@ -4,7 +4,6 @@ local urlencode = require('scripts/advertise_server/urlencode')
 local folder_path = "scripts/advertise_server/data/"
 local advertisement_json_path = folder_path.."advertisement.json"
 local secret_keys_json_path = folder_path.."secret_keys.json"
-local online_players = 0
 local minimum_sync_interval = 5
 local maximum_sync_interval = 60*60
 local public_info = {
@@ -15,6 +14,9 @@ local listservers = {}
 local secret_keys = {}
 local server_ids = {}
 local last_map_list = {}
+
+--trackers for live updates
+local player_maps = {} --[player_id] = map_id
 
 --shorthands for async stuff.
 local function async(p)
@@ -38,13 +40,19 @@ end
 
 --Event handlers
 Net:on("player_connect", function(event)
-    online_players = online_players + 1
-    set_pending_field_for_all_servers("online_players",online_players)
+    player_maps[event.player_id] = 'default'--when a landing script transfers the player this will be immediately overwritten correctly (i think)
+    set_pending_field_for_all_servers("player_maps",player_maps)
 end)
 
 Net:on("player_disconnect", function(event)
-    online_players = online_players - 1
-    set_pending_field_for_all_servers("online_players",online_players)
+    player_maps[event.player_id] = nil
+    set_pending_field_for_all_servers("player_maps",player_maps)
+end)
+
+Net:on("player_area_transfer", function(event)
+    local player_area = Net.get_player_area(event.player_id)
+    player_maps[event.player_id] = player_area
+    set_pending_field_for_all_servers("player_maps",player_maps)
 end)
 
 function set_pending_field_for_all_servers(field_name,value)
@@ -151,7 +159,6 @@ local function load_all_images_for_advertisements(advertisements)
 end
 
 local function initialize_pending_fields_from_advertisements(advertisements)
-    set_pending_field_for_all_servers("online_players",0)
     for i, advertisement in ipairs(advertisements) do
         --Some ephemral fields need defaults
         local server_id = advertisement.unique_server_id
@@ -166,26 +173,37 @@ local function build_server_map(areas)
     for i, area_id in ipairs(areas) do
         local area_p = Net.get_area_custom_properties(area_id)
         if not server_map[area_id] then
+            --initialize server map
             server_map[area_id] = {
                 name=area_p["Name"],
                 l={},--local connections (same server)
                 r={}--remote connections (other servers)
             }
         end
+        local map_info = server_map[area_id]
         local objects = Net.list_objects(area_id)
         for j, object_id in ipairs(objects) do
             local object = Net.get_object_by_id(area_id,object_id)
             local custom_p = object.custom_properties
+            --record map connections
+            --local (ezlibs warps)
             if custom_p["Target Area"] then
                 server_map[area_id].l[custom_p["Target Area"]] = {id=custom_p["Target Object"]}
             end
             if custom_p["hp_object_type"] == "city_warp" then
                 server_map[area_id].l["default"] = {id=1}
             end
+            --remote (server warps)
             local address = custom_p["address"]
             local port = custom_p["port"]
             if address and port then
                 server_map[area_id].r[address..":"..port] = {data=custom_p["data"],incoming_data=custom_p["warp_code"]}
+            end
+            --record extra map info
+            if object.class == "Shop" then
+                map_info.has_shop = true
+            elseif object.class == "Board" then
+                map_info.has_board = true
             end
         end
     end
