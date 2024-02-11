@@ -6,7 +6,42 @@
     "folders": [
         "."
     ],
-    "objectTypesFile": "",
     "propertyTypes": [
+        {
+            "color": "#ffacb7fa",
+            "id": 1,
+            "members": [
+            ],
+            "name": "AI NPC Profile",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffb8ffb7",
+            "id": 2,
+            "members": [
+            ],
+            "name": "AI POI",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        }
     ]
 }
