@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="isometric" renderorder="right-down" compressionlevel="0" width="80" height="80" tilewidth="64" tileheight="32" infinite="0" nextlayerid="44" nextobjectid="2452">
+<map version="1.10" tiledversion="1.10.2" orientation="isometric" renderorder="right-down" compressionlevel="0" width="80" height="80" tilewidth="64" tileheight="32" infinite="0" nextlayerid="44" nextobjectid="2457">
  <editorsettings>
   <export target="../../../tmx-parser/default.json" format="json"/>
  </editorsettings>
@@ -370,7 +370,7 @@
   <object id="1727" gid="6" x="640" y="448" width="44" height="61"/>
   <object id="1728" gid="6" x="736" y="448" width="44" height="61"/>
   <object id="1729" gid="6" x="832" y="448" width="44" height="61"/>
-  <object id="1782" name="Back Alley Shop" class="NPC" x="363" y="843">
+  <object id="1782" name="Back Alley Shop" type="NPC" x="363" y="843">
    <properties>
     <property name="Asset Name" value="heel-navi-exe4_black"/>
     <property name="Dialogue Type" value="random"/>
@@ -379,37 +379,37 @@
    </properties>
    <point/>
   </object>
-  <object id="1996" name="Rankings BBS" class="MARKER" x="571" y="1403">
+  <object id="1996" name="Rankings BBS" type="MARKER" x="571" y="1403">
    <point/>
   </object>
-  <object id="2051" name="Shop?" class="MARKER" x="747" y="331">
+  <object id="2051" name="Shop?" type="MARKER" x="747" y="331">
    <point/>
   </object>
-  <object id="2054" name="Shop?" class="MARKER" x="859" y="571">
+  <object id="2054" name="Shop?" type="MARKER" x="859" y="571">
    <point/>
   </object>
-  <object id="2055" name="Event Square" class="MARKER" x="1387" y="1387">
+  <object id="2055" name="Event Square" type="MARKER" x="1387" y="1387">
    <point/>
   </object>
-  <object id="2056" name="Big Building?" class="MARKER" x="1163" y="1163">
+  <object id="2056" name="Big Building?" type="MARKER" x="1163" y="1163">
    <point/>
   </object>
-  <object id="2058" name="Free PVP Area" class="MARKER" x="571" y="1531">
+  <object id="2058" name="Free PVP Area" type="MARKER" x="571" y="1531">
    <point/>
   </object>
-  <object id="2113" name="Tournament Arena" class="MARKER" x="1875" y="619">
+  <object id="2113" name="Tournament Arena" type="MARKER" x="1875" y="619">
    <point/>
   </object>
-  <object id="2221" name="Park?" class="MARKER" x="1939" y="1919">
+  <object id="2221" name="Park?" type="MARKER" x="1939" y="1919">
    <point/>
   </object>
-  <object id="2227" name="Casino?" class="MARKER" x="47" y="419">
+  <object id="2227" name="Casino?" type="MARKER" x="47" y="419">
    <point/>
   </object>
-  <object id="2228" name="Water?" class="MARKER" x="2167" y="2147">
+  <object id="2228" name="Water?" type="MARKER" x="2167" y="2147">
    <point/>
   </object>
-  <object id="2229" name="Home Warp" class="Home Warp" gid="1" x="0" y="-4" width="60" height="32" visible="0"/>
+  <object id="2229" name="Home Warp" type="Home Warp" gid="1" x="0" y="-4" width="60" height="32" visible="0"/>
   <object id="2230" gid="63" x="2283" y="459" width="192" height="192"/>
   <object id="2232" gid="63" x="2187" y="459" width="192" height="192"/>
   <object id="2234" gid="63" x="2091" y="459" width="192" height="192"/>
@@ -514,7 +514,7 @@
   <object id="2383" gid="63" x="1195" y="1707" width="192" height="192"/>
   <object id="2384" gid="63" x="1099" y="1611" width="192" height="192"/>
   <object id="2385" gid="63" x="1035" y="1515" width="192" height="192"/>
-  <object id="2421" name="ToHomepage" class="Homepage Warp" gid="2147483712" x="724" y="1188" width="22" height="48"/>
+  <object id="2421" name="ToHomepage" type="Homepage Warp" gid="2147483712" x="724" y="1188" width="22" height="48"/>
   <object id="2424" name="Apartment Entry" gid="64" x="228.5" y="1395.5" width="22" height="48"/>
   <object id="2425" name="Apartment Entry" gid="2147483712" x="596" y="1956" width="22" height="48"/>
   <object id="2426" name="Apartment Entry" gid="2147483712" x="916" y="1956" width="22" height="48"/>
@@ -525,7 +525,7 @@
   <object id="2431" name="FromHomepage" x="754" y="1220">
    <point/>
   </object>
-  <object id="2432" name="Back Alley Shop" class="NPC" x="367.5" y="752.5">
+  <object id="2432" name="Back Alley Shop" type="NPC" x="367.5" y="752.5">
    <properties>
     <property name="Asset Name" value="heel-navi-exe4_black"/>
     <property name="Dialogue Type" value="random"/>
@@ -535,7 +535,7 @@
    <point/>
   </object>
   <object id="2433" name="Apartment Entry" gid="2147483712" x="602.5" y="1943.5" width="22" height="48"/>
-  <object id="2436" name="HomePage Shop" class="NPC" x="689" y="1233">
+  <object id="2436" name="HomePage Shop" type="NPC" x="689" y="1233">
    <properties>
     <property name="Asset Name" value="prog"/>
     <property name="Dialogue Type" value="question"/>
@@ -545,7 +545,7 @@
    </properties>
    <point/>
   </object>
-  <object id="2437" name="HomePage Shop" class="dialogue" x="163.5" y="1096.5">
+  <object id="2437" name="HomePage Shop" type="dialogue" x="163.5" y="1096.5">
    <properties>
     <property name="Dialogue Type" value="shop"/>
     <property name="Item 1" type="object" value="2438"/>
@@ -598,13 +598,13 @@
    </properties>
    <point/>
   </object>
-  <object id="2444" name="Info Prog" class="NPC" x="816.5" y="1265.5">
+  <object id="2444" name="Info Prog" type="NPC" x="818.5" y="1265.5">
    <properties>
     <property name="Asset Name" value="prog"/>
     <property name="Dialogue Type" value="random"/>
     <property name="Direction" value="Down Right"/>
     <property name="Text 1">THIS WAS AN EARLY PROTOTYPE MAP FOR NET CITY
-ITS MOSTLY EMPTY, BUT THERE IS A NEW MAP COMING SOON!</property>
+ITS MOSTLY EMPTY, BUT THERE IS A NEW MAP COMING EVENTUALLY!</property>
     <property name="Text 2" value="YOU CAN LINK YOUR HOMEPAGE TO OTHERS USING PAGE WARPS!"/>
     <property name="Text 3">SINCE THIS IS AN ALPHA
 YOUR PROGRESS WILL BE WIPED SOONER OR LATER</property>
@@ -641,13 +641,58 @@ YOUR PROGRESS WILL BE WIPED SOONER OR LATER</property>
    </properties>
    <point/>
   </object>
-  <object id="2451" class="Mystery Data" gid="65" x="42.5" y="2037.5" width="14" height="43">
+  <object id="2451" type="Mystery Data" gid="65" x="42.5" y="2037.5" width="14" height="43">
    <properties>
     <property name="Description" value="Tribute to the first one"/>
     <property name="Name" value="PIKKMN"/>
     <property name="Once" type="bool" value="true"/>
     <property name="Type" value="keyitem"/>
    </properties>
+  </object>
+  <object id="2452" name="Guide" type="NPC" x="755.667" y="1326.33">
+   <properties>
+    <property name="Asset Name" value="female-navi-exe5_purple"/>
+    <property name="Dialogue Type" value="first"/>
+    <property name="Direction" value="Up Right"/>
+    <property name="Next 1" type="object" value="2453"/>
+    <property name="Text 1" value="Welcome To NetCity, What would you like to know?"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="2453" name="Quiz" type="Dialogue" x="737" y="1336">
+   <properties>
+    <property name="Asset Name" value="female-navi-exe5_purple"/>
+    <property name="Dialogue Type" value="quiz"/>
+    <property name="Next 2" type="object" value="2454"/>
+    <property name="Next 3" type="object" value="2456"/>
+    <property name="Next 4" type="object" value="2455"/>
+    <property name="Text 1" value="Nothing!"/>
+    <property name="Text 2" value="Editing"/>
+    <property name="Text 3" value="Objects"/>
+    <property name="Text 4" value="Warps"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="2454" name="Editing" x="708.909" y="1338.73">
+   <properties>
+    <property name="Dialogue Type" value="first"/>
+    <property name="Text 1" value="In your HomePage, Press R to open then menu and open Edit Mode. Once you happy with your changes, Choose Save Changes, or Discard Changes if you want to undo them"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="2455" name="Warps" x="718.182" y="1351.64">
+   <properties>
+    <property name="Dialogue Type" value="first"/>
+    <property name="Text 1" value="PageWarps can link around NetCity, ServerWarps link to other servers. After placing a warp you will be told its WarpData, set another warp's target_code to that WarpData, the warp will activate!"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="2456" name="Objects" x="733.091" y="1360.36">
+   <properties>
+    <property name="Dialogue Type" value="first"/>
+    <property name="Text 1" value="Objects have properties that you can configure, you will be prompted to fill these when you place an object, if you forget them you can use InspectObjects to read them, or you can edit them with ConfigureObjects"/>
+   </properties>
+   <point/>
   </object>
  </objectgroup>
  <layer id="12" name="Floor 2" width="80" height="80" offsetx="0" offsety="-64">
