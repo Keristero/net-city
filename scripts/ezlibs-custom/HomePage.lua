@@ -84,9 +84,6 @@ end
 
 function HomePage:Initialize_from_template(template_map)
     Net.clone_area(template_map, self.area_id)
-    local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
-    local new_area_name = player_name_safe.." HP"
-    Net.set_area_name(self.area_id,new_area_name)
     self:Save()
 end
 
@@ -154,10 +151,16 @@ function HomePage:Finish_editing()
     for index, object_id in ipairs(area_objects) do
         self:Enable_class(object_id)
     end
+    --make area public again (if it should be)
+    if self.city_warp_object.custom_properties["public_name"] ~= nil and self.city_warp_object.custom_properties["public_name"] ~= "" then
+        self.is_public = true
+        print('updated public homepage '..self.city_warp_object.custom_properties["public_name"])
+    end
 end
 
 function HomePage:Start_editing(player_id)
     self.editor_id = player_id
+    self.is_public = false
     local area_objects = Net.list_objects(self.area_id)
     for index, object_id in ipairs(area_objects) do
         self:Disable_class(object_id)
@@ -492,6 +495,12 @@ function HomePage:Save(last_editor_id)
     local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
     self.valitation_error = self:Scan_and_validate()
     if self.valitation_error == nil then
+        --update area name
+        local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
+        local new_area_name = player_name_safe.." HP"
+        self.player_name_safe = player_name_safe
+        Net.set_area_name(self.area_id,new_area_name)
+        --save area
         player_memory.home_page_data = Net.map_to_string(self.area_id)
         ezmemory.save_player_memory(self.player_safe_secret)
     else

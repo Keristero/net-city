@@ -126,6 +126,9 @@ home_page_helpers.transfer_player_to_correct_homepage = function (player_id,requ
         local warp_code_info = home_page_helpers.homepage_map_memory.warp_codes[request_data]
         local homepage = home_page_helpers.get_homepage_by_safe_secret(warp_code_info.area_id)
         homepage:Transfer_player(player_id,warp_code_info.object_id)
+    elseif home_page_helpers.loaded_homepages_by_area_id[request_data] then
+        local homepage = home_page_helpers.loaded_homepages_by_area_id[request_data]
+        homepage:Transfer_player(player_id,homepage.city_warp_object.id)
     end
 end
 
