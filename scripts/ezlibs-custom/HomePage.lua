@@ -54,14 +54,20 @@ end
 
 function HomePage:Initialize_from_memory()
     local player_memory = ezmemory.get_player_memory(self.player_safe_secret)
-    Net.update_area(self.area_id, player_memory.home_page_data)
-    local validation_error = self:Scan_and_validate()
+    local validation_error = "failed to load home page from memory"
+    pcall(function()
+        Net.update_area(self.area_id, player_memory.home_page_data)
+        validation_error = self:Scan_and_validate()
+    end)
     if validation_error == nil then
         self:Upgrade(home_page_helpers.base_homepage_map_id)
         --print('loaded home page from memory')
+        self:Update_public_status()
     else
         error('corrupt home page data for '..self.player_safe_secret..' error= '..validation_error)
+        return false
     end
+    return true
 end
 
 function HomePage:Register_unique_page_warp(object_id)
@@ -84,6 +90,7 @@ end
 
 function HomePage:Initialize_from_template(template_map)
     Net.clone_area(template_map, self.area_id)
+    self:Refresh_page_elements()
     self:Save()
 end
 
@@ -151,16 +158,10 @@ function HomePage:Finish_editing()
     for index, object_id in ipairs(area_objects) do
         self:Enable_class(object_id)
     end
-    --make area public again (if it should be)
-    if self.city_warp_object.custom_properties["public_name"] ~= nil and self.city_warp_object.custom_properties["public_name"] ~= "" then
-        self.is_public = true
-        print('updated public homepage '..self.city_warp_object.custom_properties["public_name"])
-    end
 end
 
 function HomePage:Start_editing(player_id)
     self.editor_id = player_id
-    self.is_public = false
     local area_objects = Net.list_objects(self.area_id)
     for index, object_id in ipairs(area_objects) do
         self:Disable_class(object_id)
@@ -210,7 +211,6 @@ function HomePage:Open_menu(player_id)
         end
         local menu_board = ezmenus.open_menu(player_id, menu_title,menu_color,posts)
         local post_id = await(menu_board.selection_once())
-        print('post_id',post_id)
         await(menu_board.close_async())
         if post_id == "Save Changes" then
             self:Finish_editing_and_save()
@@ -422,6 +422,8 @@ function HomePage:Prompt_for_custom_properties(object_id)
                     new_value = await(self:Friend_prompt())
                 else
                     new_value = await(Async.prompt_player(self.editor_id,nil,default_value))
+                    --sanatize the input so it does not break XML
+                    new_value = home_page_helpers.sanatize_user_input(new_value)
                 end
                 Net.set_object_custom_property(self.area_id, object_id, prop_name, new_value)
             end
@@ -498,7 +500,6 @@ function HomePage:Save(last_editor_id)
         --update area name
         local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
         local new_area_name = player_name_safe.." HP"
-        self.player_name_safe = player_name_safe
         Net.set_area_name(self.area_id,new_area_name)
         --save area
         player_memory.home_page_data = Net.map_to_string(self.area_id)
@@ -507,6 +508,26 @@ function HomePage:Save(last_editor_id)
         error("[Homepage] validation error saivng homepage with no last_editor_id!")
         self:Start_editing(last_editor_id)
         Net.message_player(last_editor_id, "Error saving homepage, resolve the following before saving again : "..self.valitation_error)
+    end
+end
+
+function HomePage:Update_public_status()
+    if self.city_warp_object == nil then
+        --No city warp object, so no public homepage
+        home_page_helpers.public_homepages_by_area_id[self.area_id] = nil
+        return
+    end
+    local public_name = self.city_warp_object.custom_properties["public_name"]
+    local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
+    local should_be_public = (public_name ~= nil and public_name ~= "" and player_name_safe ~= nil and player_name_safe ~= "")
+    print('should be public: ',should_be_public,public_name,player_name_safe)
+    if should_be_public then
+        home_page_helpers.public_homepages_by_area_id[self.area_id] = {
+            title = public_name,
+            author = player_name_safe
+        }
+    else 
+        home_page_helpers.public_homepages_by_area_id[self.area_id] = nil
     end
 end
 
@@ -535,6 +556,8 @@ function HomePage:Refresh_page_elements()
             end
         end
     end
+    --make area public again (if it should be)
+    self:Update_public_status()
 end
 
 function HomePage:Scan_and_validate()

@@ -4,6 +4,7 @@ local ezmemory = require('scripts/ezlibs-scripts/ezmemory')
 local helpers = require('scripts/ezlibs-scripts/helpers')
 local xml2lua = require("scripts/ezlibs-custom/xml2lua")
 local tree_handler = require("scripts/ezlibs-custom/xml2luatreehandler")
+local urlencode = require('scripts/ezlibs-scripts/urlencode')
 
 local home_page_helpers = {}
 home_page_helpers.base_homepage_map_id = 'base_homepage'
@@ -13,6 +14,7 @@ home_page_helpers.objects = {}
 home_page_helpers.name_to_gid = {}
 home_page_helpers.loaded_homepages_by_safe_secret = {}
 home_page_helpers.loaded_homepages_by_area_id = {}
+home_page_helpers.public_homepages_by_area_id = {}
 
 local objects = {}
 
@@ -44,7 +46,6 @@ local function load_home_page_helpers()
                     width = object.width,
                     height = object.height
                 }
-                print(decoration_info)
                 home_page_helpers.gid[first_gid] = decoration_info
                 home_page_helpers.name_to_gid[object.name] = first_gid
                 --also save the decorations to a list of tiles and objects
@@ -58,8 +59,16 @@ local function load_home_page_helpers()
                 Net.remove_object(home_page_helpers.base_homepage_map_id, object_id)
             end
         end
+        --iterate over players json and load all home pages
+        local player_list = ezmemory.get_player_list()
+        for safe_secret, name in pairs(player_list) do
+            print("initializing homepages for "..name)
+            local homepage = home_page_helpers.get_homepage_by_safe_secret(safe_secret)
+        end
     end)
 end
+
+
 
 home_page_helpers.get_objects_first_gid = function(object)
     local tileset = Net.get_tileset_for_tile(home_page_helpers.base_homepage_map_id, object.data.gid)
@@ -87,7 +96,6 @@ home_page_helpers.create_object_from_gid = function(area_id, object_gid, x, y, z
         },
         custom_properties = decoration_info.custom_properties
     }
-    print(temporary_object_info)
     local temporary_object_id = Net.create_object(area_id, temporary_object_info)
     return temporary_object_id
 end
@@ -105,9 +113,11 @@ home_page_helpers.get_homepage_by_safe_secret = function(safe_secret)
         local homepage = HomePage:new(safe_secret)
         home_page_helpers.loaded_homepages_by_safe_secret[safe_secret] = homepage
         home_page_helpers.loaded_homepages_by_area_id[homepage.area_id] = homepage
+        local loaded = false
         if player_memory.home_page_data then
-            homepage:Initialize_from_memory()
-        else
+            loaded = homepage:Initialize_from_memory()
+        end
+        if not loaded then
             homepage:Initialize_from_template(home_page_helpers.base_homepage_map_id)
         end
         return homepage
@@ -141,11 +151,15 @@ home_page_helpers.upgrade_homepage_xml = function (old_xml_str,new_xml_str)
     parser2:parse(new_xml_str)
     local old_tilesets = handler1.root.map.tileset
     local new_tilesets = handler2.root.map.tileset
-    print('old tilesets = ',old_tilesets)
-    print('new tilesets = ',new_tilesets)
     --overwrite old tilesets
     handler1.root.map.tileset = handler2.root.map.tileset
     return xml2lua.toXml(handler1.root,nil)
+end
+
+home_page_helpers.sanatize_user_input = function(input_string)
+    --replace all characters that could break xml with a space
+    local sanitized_string = input_string:gsub("[<>&\"']", " ")
+    return sanitized_string
 end
 
 load_home_page_helpers()

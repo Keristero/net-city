@@ -681,7 +681,7 @@ YOUR PROGRESS WILL BE WIPED SOONER OR LATER</property>
   <object id="2455" name="Warps" x="718.182" y="1351.64">
    <properties>
     <property name="Dialogue Type" value="first"/>
-    <property name="Text 1" value="You can make your HP by configuring public_name on your CityWarp. PageWarps can link around NetCity, ServerWarps link to other servers. After placing a warp you will be told its WarpData, set another warp's target_code to that WarpData, the warp will activate!"/>
+    <property name="Text 1" value="You can make your HP visitable by configuring public_name on your CityWarp. PageWarps can link around NetCity, ServerWarps link to other servers. After placing a warp you will be told its WarpData, set another warp's target_code to that WarpData, the warp will activate!"/>
    </properties>
    <point/>
   </object>

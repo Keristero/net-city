@@ -53,18 +53,12 @@ end)
 function visit_public_homepage(player_id)
     return async(function ()
         local bbs_options = {}
-        --iterate over all homepages
-        for area_id, homepage in pairs(home_page_helpers.loaded_homepages_by_area_id) do
-            --check that the homepage is public
-            if homepage.is_public then
-                --add homepage to menu
-                --title is first 10 characters of the home warp's public name
-                local public_name = homepage.city_warp_object.custom_properties["public_name"]
-                local title = string.sub(public_name,1,10)
-                local author = string.sub(homepage.player_name_safe,1,10)
-                local option = {id=area_id, title=title,read=true,author=author}
-                table.insert(bbs_options, option)
-            end
+        --iterate over all public homepages
+        for area_id, public_data in pairs(home_page_helpers.public_homepages_by_area_id) do
+            local title = public_data.title
+            local author = public_data.author
+            local option = {id=area_id, title=title,read=true,author=author}
+            table.insert(bbs_options, option)
         end
         --Open the menu and wait for a selection
         local menu = ezmenus.open_menu(player_id,"Visit",visit_menu_color,bbs_options)
