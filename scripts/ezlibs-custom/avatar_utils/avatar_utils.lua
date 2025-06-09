@@ -1,4 +1,5 @@
 local lua_yes_parser = require('scripts/ezlibs-custom/avatar_utils/lua_yes_parser/lib')
+local base64 = require('scripts/ezlibs-custom/avatar_utils/base64')
 
 local avatar_utils = {}
 
@@ -9,7 +10,7 @@ local function parse_duration(duration_str)
         duration_str = "0.00"..duration_str:sub(1, -2) -- remove the last character
         multi = 16.6
     end
-    local duration = tonumber(duration_str)
+    local duration = tonumber(duration_str) or 0
     return duration*multi
 end
 
@@ -18,6 +19,10 @@ local get_arg_by_key = function (args,key,transform)
         if arg.key == key then
             --always remove " from string
             local value = arg.val:gsub('"','')
+            -- ensure value is not nil
+            if value == nil or value == '' then
+                return nil
+            end
             if transform == nil then
                 return value
             end
@@ -49,21 +54,23 @@ local copy_file = function(source, destination)
 end
 
 avatar_utils.copy_player_avatar_to = function(player_id, new_texture_path, new_animation_path)
-    return async(function()
-        local player_avatar_path = '/server/players/' .. player_id
-        local texture_path = player_avatar_path .. '.texture'
-        local animation_path = player_avatar_path .. '.animation'
+    local player_avatar_path = '/server/players/' .. player_id
+    local texture_path = player_avatar_path .. '.texture'
+    local animation_path = player_avatar_path .. '.animation'
+    if not Net.has_asset(animation_path) or  not Net.has_asset(texture_path) then
+        return false
+    end
+    if Net.has_asset(animation_path) and Net.has_asset(texture_path) then
+        local animation_data = Net.read_asset(animation_path)
+        io.open(new_animation_path, "wb"):write(animation_data):close()
 
-        print(Net.has_asset(animation_path))
-        print(Net.get_asset_type(animation_path))
-        print(Net.get_asset_size(animation_path))
-
-        local area_id = Net.get_player_area(player_id)
-        Net.provide_asset(area_id, animation_path)
-
-        await(copy_file(texture_path, new_texture_path))
-        await(copy_file(animation_path, new_animation_path))
-    end)
+        --use lua io to write the texture
+        local texture_data_b64_string = Net.read_asset(texture_path)
+        --write the texture to a image file
+        local texture_data = base64.decode(texture_data_b64_string)
+        io.open(new_texture_path, "wb"):write(texture_data):close()
+    end
+    return true
 end
 
 avatar_utils.parse_animation_file = function(avatar_path)
