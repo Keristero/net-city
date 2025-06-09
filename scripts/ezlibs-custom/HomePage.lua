@@ -4,6 +4,7 @@ local urlencode = require('scripts/ezlibs-scripts/urlencode')
 local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 local ezmenus = require('scripts/ezlibs-scripts/ezmenus')
 local Direction = require("scripts/ezlibs-scripts/direction")
+local base64 = require('scripts/advertise_server/base64')
 
 local net_city_map_id = 'default'
 local test_net_city_homepage_exit_id = 2431
@@ -12,6 +13,7 @@ local homepage_menu_color = {r=20,g=50,b=200}
 local edit_mode_color = {r=100,g=100,b=100}
 local storage_menu_color = {r=40,g=150,b=40}
 local direction_menu_color = {r=100,g=100,b=40}
+local homepage_bbs_color = {r=100,g=40,b=100}
 
 local classes_to_disable = {"Home Warp","Custom Warp","Server Warp"}
 
@@ -22,6 +24,14 @@ local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_oper
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
 local create_configure_object_operation = require('scripts/ezlibs-custom/homepage_operations/configure_object')
 local create_inspect_object_operation = require('scripts/ezlibs-custom/homepage_operations/inspect_object')
+
+local hidden_properties = {
+    "hp_object_type",
+    "hp_object_type_default",
+    "disabled_frame_index",
+    "enabled_frame_index",
+    "bbs_b64"
+}
 
 
 --[[ local page_warps = {}
@@ -355,7 +365,8 @@ function HomePage:List_object_properties_to_player(new_object_id)
     return async(function()
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         for prop_name, prop_value in pairs(object.custom_properties) do
-            if prop_name == "hp_object_type" or prop_name == "disabled_frame_index" or prop_name == "enabled_frame_index" then
+            -- continue if property is in hidden_properties
+            if helpers.indexOf(hidden_properties, prop_name) ~= nil then
                 goto continue
             end
             if object.custom_properties[prop_name.."_default"] then
@@ -475,6 +486,7 @@ end
 function HomePage:Async_object_interaction(event)
     return async(function ()
         local object = Net.get_object_by_id(self.area_id,event.object_id)
+        local is_owner = helpers.get_safe_player_secret(event.player_id) == self.player_safe_secret
         if object.custom_properties["hp_object_type"] then
             local hp_object_type = object.custom_properties["hp_object_type"]
             if hp_object_type == "flavour_text" then
@@ -483,6 +495,27 @@ function HomePage:Async_object_interaction(event)
                     await(Async.message_player(event.player_id,object.custom_properties["text"]))
                 end
             end
+            if hp_object_type == "bbs" then
+                local posts = {}
+                local menu_color = homepage_bbs_color
+                local menu_title = object.custom_properties["topic"]
+                local public_posting = object.custom_properties["public_posting"] == "true"
+                if is_owner then
+                    table.insert(posts, helpers.create_bbs_option("View BBS"))
+                    table.insert(posts, helpers.create_bbs_option("Clear BBS"))
+                end
+
+                local menu_board = ezmenus.open_menu(event.player_id, menu_title,menu_color,posts)
+            end
+        end
+    end)
+end
+
+function HomePage:view_bbs(event,object)
+    return async(function ()
+        if object and object.custom_properties["bbs_b64"] then
+            --decode the base64 encoded bbs data
+            local bbs_data = base64.decode(object.custom_properties["bbs_b64"])
         end
     end)
 end

@@ -633,9 +633,9 @@ YOUR PROGRESS WILL BE WIPED SOONER OR LATER</property>
    </properties>
    <point/>
   </object>
-  <object id="2449" name="NaviSpot" x="74.5" y="1067.5">
+  <object id="2449" name="MessageBBS" x="74.5" y="1067.5">
    <properties>
-    <property name="Name" value="NaviSpot"/>
+    <property name="Name" value="MessageBBS"/>
     <property name="Price" type="int" value="0"/>
    </properties>
    <point/>
