@@ -29,11 +29,13 @@ local PageWarp = require('scripts/ezlibs-custom/homepage_entities/PageWarp')
 local FlavourText = require('scripts/ezlibs-custom/homepage_entities/FlavourText')
 local NaviSpot = require('scripts/ezlibs-custom/homepage_entities/NaviSpot')
 local BBS = require('scripts/ezlibs-custom/homepage_entities/BBS')
+local ServerWarp = require('scripts/ezlibs-custom/homepage_entities/ServerWarp')
 local home_page_entities = {
     page_warp = PageWarp,
     flavour_text = FlavourText,
     navi_spot = NaviSpot,
-    bbs = BBS
+    bbs = BBS,
+    server_warp = ServerWarp
 }
 
 
@@ -347,17 +349,21 @@ end
 
 function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
     return async(function()
-        await(self:Prompt_for_custom_properties(new_object_id))
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         local hp_object_type = object.custom_properties["hp_object_type"]
+        local HomePageEntity = nil
+        if hp_object_type then
+            HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+        end
+        if HomePageEntity and HomePageEntity.pre_configure then
+            print("[Homepage] pre_configure for object: " .. hp_object_type)
+            HomePageEntity.pre_configure(self, object)
+        end
+        await(self:Prompt_for_custom_properties(new_object_id))
         if not is_reconfigure then
-            if hp_object_type then
-                if hp_object_type == "page_warp" or hp_object_type == "server_warp" then
-                    await(Async.message_player(self.editor_id,"Registering page warp..."))
-                    local warp_code = self:Register_unique_page_warp(new_object_id)
-                    Net.set_object_custom_property(self.area_id,new_object_id,'warp_code',warp_code)
-                    await(Async.message_player(self.editor_id,"Warp data is:\n"..warp_code))
-                end
+            if HomePageEntity and HomePageEntity.post_placement then
+                print("[Homepage] post_placement for object: " .. hp_object_type)
+                HomePageEntity.post_placement(self, object)
             end
         end
     end)

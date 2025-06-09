@@ -1,4 +1,5 @@
 local avatar_utils = require('scripts/ezlibs-custom/avatar_utils/avatar_utils')
+local helpers = require('scripts/ezlibs-scripts/helpers')
 
 --todo
 -- create special promp for choosing the idle animation
@@ -8,6 +9,19 @@ local avatar_utils = require('scripts/ezlibs-custom/avatar_utils/avatar_utils')
 
 
 local entity = {}
+
+entity.pre_configure = function (homepage,object)
+    return async(function()
+        local player_id = homepage.editor_id
+        local new_avatar_folder = 'assets/avatars/'
+        local player_safe_secret = helpers.get_safe_player_secret(player_id)
+        local texture_filename = new_avatar_folder..player_safe_secret..".png"
+        local animation_filename = new_avatar_folder..player_safe_secret..".animation"
+        await(avatar_utils.copy_player_avatar_to(player_id,texture_filename,animation_filename))
+        print("NaviSpot: Copied player avatar to: " .. texture_filename .. " and " .. animation_filename)
+    end)
+end
+
 entity.on_refresh = function (homepage,object)
     local texture_path = object.custom_properties["texture_path"]
     local animation_path = object.custom_properties["animation_path"]

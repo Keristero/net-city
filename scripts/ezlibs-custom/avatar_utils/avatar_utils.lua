@@ -38,28 +38,32 @@ local assert_no_nils = function(expected_args)
 end
 
 local copy_file = function(source, destination)
-    local source_file = io.open(source, "r")
-    if not source_file then
-        error("Source file not found: " .. source)
-    end
-    local destination_file = io.open(destination, "w")
-    if not destination_file then
-        error("Could not open destination file for writing: " .. destination)
-    end
-    destination_file:write(source_file:read("*a"))
-    source_file:close()
-    destination_file:close()
+    return async(function()
+        local source_file = await(Async.read_file(source))
+        if not source_file then
+            error("Source file not found: " .. source)
+        end
+        await(Async.write_file(destination, source_file))
+        print('copied file file',source,'to',destination)
+    end)
 end
 
-avatar_utils.copy_player_avatar_to = function(player_id, new_avatar_path, new_texture_filename, new_animation_filename)
-    local player_avatar_path = 'players/' .. player_id
-    local texture_path = player_avatar_path .. '.texture'
-    local animation_path = player_avatar_path .. '.animation'
-    local new_texture_path = new_avatar_path .. new_texture_filename
-    local new_animation_path = new_avatar_path .. new_animation_filename
+avatar_utils.copy_player_avatar_to = function(player_id, new_texture_path, new_animation_path)
+    return async(function()
+        local player_avatar_path = '/server/players/' .. player_id
+        local texture_path = player_avatar_path .. '.texture'
+        local animation_path = player_avatar_path .. '.animation'
 
-    copy_file(texture_path, new_texture_path)
-    copy_file(animation_path, new_animation_path)
+        print(Net.has_asset(animation_path))
+        print(Net.get_asset_type(animation_path))
+        print(Net.get_asset_size(animation_path))
+
+        local area_id = Net.get_player_area(player_id)
+        Net.provide_asset(area_id, animation_path)
+
+        await(copy_file(texture_path, new_texture_path))
+        await(copy_file(animation_path, new_animation_path))
+    end)
 end
 
 avatar_utils.parse_animation_file = function(avatar_path)
