@@ -4,7 +4,6 @@ local urlencode = require('scripts/ezlibs-scripts/urlencode')
 local home_page_helpers = require("scripts/ezlibs-custom/home_page_helpers")
 local ezmenus = require('scripts/ezlibs-scripts/ezmenus')
 local Direction = require("scripts/ezlibs-scripts/direction")
-local base64 = require('scripts/advertise_server/base64')
 
 local net_city_map_id = 'default'
 local test_net_city_homepage_exit_id = 2431
@@ -13,10 +12,10 @@ local homepage_menu_color = {r=20,g=50,b=200}
 local edit_mode_color = {r=100,g=100,b=100}
 local storage_menu_color = {r=40,g=150,b=40}
 local direction_menu_color = {r=100,g=100,b=40}
-local homepage_bbs_color = {r=100,g=40,b=100}
 
 local classes_to_disable = {"Home Warp","Custom Warp","Server Warp"}
 
+--Operations
 local create_move_selection_operation = require('scripts/ezlibs-custom/homepage_operations/move_selection')
 local create_store_object_operation = require('scripts/ezlibs-custom/homepage_operations/store_object')
 local create_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
@@ -25,12 +24,16 @@ local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_oper
 local create_configure_object_operation = require('scripts/ezlibs-custom/homepage_operations/configure_object')
 local create_inspect_object_operation = require('scripts/ezlibs-custom/homepage_operations/inspect_object')
 
-local hidden_properties = {
-    "hp_object_type",
-    "hp_object_type_default",
-    "disabled_frame_index",
-    "enabled_frame_index",
-    "bbs_b64"
+--Entities
+local PageWarp = require('scripts/ezlibs-custom/homepage_entities/PageWarp')
+local FlavourText = require('scripts/ezlibs-custom/homepage_entities/FlavourText')
+local NaviSpot = require('scripts/ezlibs-custom/homepage_entities/NaviSpot')
+local BBS = require('scripts/ezlibs-custom/homepage_entities/BBS')
+local home_page_entities = {
+    page_warp = PageWarp,
+    flavour_text = FlavourText,
+    navi_spot = NaviSpot,
+    bbs = BBS
 }
 
 
@@ -305,7 +308,6 @@ function HomePage:Replace_tile(new_tile_gid,x,y,z,flipped_h,flipped_v,rotated)
     end
 end
 
-
 function HomePage:Try_open_menu(event)
     --Allow owner to open the homepage menu
     local player_safe_secret = helpers.get_safe_player_secret(event.player_id)
@@ -365,8 +367,7 @@ function HomePage:List_object_properties_to_player(new_object_id)
     return async(function()
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         for prop_name, prop_value in pairs(object.custom_properties) do
-            -- continue if property is in hidden_properties
-            if helpers.indexOf(hidden_properties, prop_name) ~= nil then
+            if prop_name == "hp_object_type" or prop_name == "disabled_frame_index" or prop_name == "enabled_frame_index" then
                 goto continue
             end
             if object.custom_properties[prop_name.."_default"] then
@@ -486,36 +487,11 @@ end
 function HomePage:Async_object_interaction(event)
     return async(function ()
         local object = Net.get_object_by_id(self.area_id,event.object_id)
-        local is_owner = helpers.get_safe_player_secret(event.player_id) == self.player_safe_secret
         if object.custom_properties["hp_object_type"] then
-            local hp_object_type = object.custom_properties["hp_object_type"]
-            if hp_object_type == "flavour_text" then
-                local text = object.custom_properties["text"]
-                if text ~= "" then
-                    await(Async.message_player(event.player_id,object.custom_properties["text"]))
-                end
+            local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+            if HomePageEntity and HomePageEntity.on_async_object_interaction then
+                HomePageEntity.on_async_object_interaction(self, object, event)
             end
-            if hp_object_type == "bbs" then
-                local posts = {}
-                local menu_color = homepage_bbs_color
-                local menu_title = object.custom_properties["topic"]
-                local public_posting = object.custom_properties["public_posting"] == "true"
-                if is_owner then
-                    table.insert(posts, helpers.create_bbs_option("View BBS"))
-                    table.insert(posts, helpers.create_bbs_option("Clear BBS"))
-                end
-
-                local menu_board = ezmenus.open_menu(event.player_id, menu_title,menu_color,posts)
-            end
-        end
-    end)
-end
-
-function HomePage:view_bbs(event,object)
-    return async(function ()
-        if object and object.custom_properties["bbs_b64"] then
-            --decode the base64 encoded bbs data
-            local bbs_data = base64.decode(object.custom_properties["bbs_b64"])
         end
     end)
 end
@@ -552,6 +528,7 @@ function HomePage:Update_public_status()
     end
     local public_name = self.city_warp_object.custom_properties["public_name"]
     local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
+    self.player_name = player_name_safe
     local should_be_public = (public_name ~= nil and public_name ~= "" and player_name_safe ~= nil and player_name_safe ~= "")
     print('should be public: ',should_be_public,public_name,player_name_safe)
     if should_be_public then
@@ -573,19 +550,9 @@ function HomePage:Refresh_page_elements()
     for index, object_id in ipairs(object_ids) do
         local object = Net.get_object_by_id(self.area_id, object_id)
         if object.custom_properties["hp_object_type"] then
-            if object.custom_properties["hp_object_type"] == "page_warp" then
-                local target_code = object.custom_properties["target_code"]
-                local warp_is_online = false
-                if target_code ~= nil then
-                    if home_page_helpers.homepage_map_memory.warp_codes[target_code] then
-                        warp_is_online = true
-                    end
-                end
-                if warp_is_online then
-                    self:Enable_class(object_id)
-                else
-                    self:Disable_class(object_id)
-                end
+            local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+            if HomePageEntity and HomePageEntity.on_refresh then
+                HomePageEntity.on_refresh(self, object)
             end
         end
     end
