@@ -53,23 +53,38 @@ local copy_file = function(source, destination)
     end)
 end
 
-avatar_utils.copy_player_avatar_to = function(player_id, new_texture_path, new_animation_path)
-    local player_avatar_path = '/server/players/' .. player_id
-    local texture_path = player_avatar_path .. '.texture'
-    local animation_path = player_avatar_path .. '.animation'
-    if not Net.has_asset(animation_path) or  not Net.has_asset(texture_path) then
-        return false
+function set_or_update_asset(asset_path,asset_content)
+    if Net.has_asset("/server/"..asset_path) then
+        Net.remove_asset("/server/"..asset_path)
     end
-    if Net.has_asset(animation_path) and Net.has_asset(texture_path) then
-        local animation_data = Net.read_asset(animation_path)
-        io.open(new_animation_path, "wb"):write(animation_data):close()
+    Net.update_asset("/server/"..asset_path, asset_content)
+end
 
-        --use lua io to write the texture
-        local texture_data_b64_string = Net.read_asset(texture_path)
-        --write the texture to a image file
-        local texture_data = base64.decode(texture_data_b64_string)
-        io.open(new_texture_path, "wb"):write(texture_data):close()
-    end
+avatar_utils.copy_player_avatar_to = function(player_id, new_texture_path, new_animation_path,mug_texture_path, mug_animation_path)
+    local avatar = Net.get_player_avatar(player_id)
+    local mugshot = Net.get_player_mugshot(player_id)
+
+    --avatar
+    local animation_data = Net.read_asset(avatar.animation_path)
+    io.open(new_animation_path, "wb"):write(animation_data):close()
+
+    local texture_data_b64_string = Net.read_asset(avatar.texture_path)
+    local texture_data = base64.decode(texture_data_b64_string)
+    io.open(new_texture_path, "wb"):write(texture_data):close()
+
+    --mugshot
+    local mugshot_animation_data = Net.read_asset(mugshot.animation_path)
+    io.open(mug_animation_path, "wb"):write(mugshot_animation_data):close()
+
+    local mugshot_texture_data_b64_string = Net.read_asset(mugshot.texture_path)
+    local mugshot_texture_data = base64.decode(mugshot_texture_data_b64_string)
+    io.open(mug_texture_path, "wb"):write(mugshot_texture_data):close()
+
+    set_or_update_asset(new_texture_path,texture_data)
+    set_or_update_asset(new_animation_path,animation_data)
+    set_or_update_asset(mug_texture_path,mugshot_texture_data)
+    set_or_update_asset(mug_animation_path,mugshot_animation_data)
+
     return true
 end
 
@@ -78,6 +93,13 @@ avatar_utils.parse_animation_file = function(avatar_path)
         animations = {}
     }
     print('Parsing avatar: ' .. avatar_path)
+    --check file exists
+    local file = io.open(avatar_path, "r")
+    if not file then
+        print("Avatar file not found: " .. avatar_path)
+        return nil
+    end
+    file:close()
     local yes_data = lua_yes_parser.parse(avatar_path)
     local currently_parsing_animation_name = nil
     for key, value in pairs(yes_data) do

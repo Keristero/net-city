@@ -143,6 +143,12 @@ end
 
 function HomePage:Enable_class(object_id)
     local object = Net.get_object_by_id(self.area_id, object_id)
+    if object.custom_properties["hp_object_type"] then
+        local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+        if HomePageEntity and HomePageEntity.on_enable then
+            HomePageEntity.on_enable(self, object)
+        end
+    end
     if object.class:sub(-8) == "DISABLED" then
         Net.set_object_class(self.area_id, object_id, object.class:sub(0,#object.class-8))
         if object.custom_properties["enabled_frame_index"] then
@@ -156,6 +162,12 @@ end
 
 function HomePage:Disable_class(object_id)
     local object = Net.get_object_by_id(self.area_id, object_id)
+    if object.custom_properties["hp_object_type"] then
+        local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+        if HomePageEntity and HomePageEntity.on_disable then
+            HomePageEntity.on_disable(self, object)
+        end
+    end
     if helpers.indexOf(classes_to_disable, object.class) ~= nil then
         Net.set_object_class(self.area_id, object_id, object.class.."DISABLED")
         if object.custom_properties["disabled_frame_index"] then
@@ -357,7 +369,7 @@ function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
         end
         if HomePageEntity and HomePageEntity.pre_configure then
             print("[Homepage] pre_configure for object: " .. hp_object_type)
-            HomePageEntity.pre_configure(self, object)
+            await(HomePageEntity.pre_configure(self, object))
         end
         await(self:Prompt_for_custom_properties(new_object_id))
         if not is_reconfigure then
@@ -435,7 +447,8 @@ function HomePage:Prompt_for_custom_properties(object_id)
                 if prop_value:sub(0,9) == "direction" then
                     new_value = await(self:Direction_prompt())
                 elseif prop_value:sub(0,4) == "bool" then
-                    new_value = await(Async.quiz_player(self.editor_id,"true","false"))
+                    local quiz_res = await(Async.quiz_player(self.editor_id,"true","false"))
+                    new_value = tostring(quiz_res == 0)
                 elseif prop_value:sub(0,6) == "friend" then
                     new_value = await(self:Friend_prompt())
                 else

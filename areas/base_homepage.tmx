@@ -162,9 +162,8 @@
     <property name="chat" value="string_prompt"/>
     <property name="disabled_frame_index" type="int" value="8"/>
     <property name="enabled_frame_index" type="int" value="0"/>
-    <property name="facing" value="direction_prompt"/>
+    <property name="eye_contact" value="bool_prompt"/>
     <property name="hp_object_type" value="navi_spot"/>
-    <property name="idle_animation" value="string_prompt"/>
    </properties>
   </object>
   <object id="48" name="PIKKMN" gid="73" x="602.5" y="461.5" width="76" height="76"/>
