@@ -548,7 +548,6 @@
    <properties>
     <property name="Dialogue Type" value="shop"/>
     <property name="Item 1" type="object" value="2438"/>
-    <property name="Item 10" type="object" value="2459"/>
     <property name="Item 2" type="object" value="2440"/>
     <property name="Item 3" type="object" value="2441"/>
     <property name="Item 4" type="object" value="2442"/>
@@ -556,7 +555,7 @@
     <property name="Item 6" type="object" value="2445"/>
     <property name="Item 7" type="object" value="2446"/>
     <property name="Item 8" type="object" value="2448"/>
-    <property name="Item 9" type="object" value="2449"/>
+    <property name="Item 9" type="object" value="2459"/>
    </properties>
    <point/>
   </object>
@@ -630,13 +629,6 @@ YOUR PROGRESS WILL BE WIPED SOONER OR LATER</property>
    <properties>
     <property name="Amount" type="int" value="10"/>
     <property name="Name" value="StandardBlue"/>
-    <property name="Price" type="int" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="2449" name="MessageBBS" x="74.5" y="1067.5">
-   <properties>
-    <property name="Name" value="MessageBBS"/>
     <property name="Price" type="int" value="0"/>
    </properties>
    <point/>
