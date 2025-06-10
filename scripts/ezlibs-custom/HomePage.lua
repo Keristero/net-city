@@ -327,8 +327,7 @@ function HomePage:Try_open_menu(event)
     local player_safe_secret = helpers.get_safe_player_secret(event.player_id)
     local is_owner = player_safe_secret == self.player_safe_secret
     if not is_owner then
-        await(Async.message_player(event.player_id, "You dont have permission to manage this page"))
-        return
+        Net.message_player(event.player_id, "You dont have permission to manage this page")
     end
     self:Open_menu(event.player_id)
 end
