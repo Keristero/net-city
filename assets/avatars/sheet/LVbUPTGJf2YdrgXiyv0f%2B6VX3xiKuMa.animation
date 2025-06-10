@@ -1,0 +1,122 @@
+imagePath="The_Judge.png"
+
+animation state="IDLE_U"
+frame duration="0.05" x="70" y="105" w="10" h="17" originx="5" originy="16"
+
+animation state="IDLE_UR"
+frame duration="0.05" x="68" y="81" w="16" h="18" originx="8" originy="17"
+
+animation state="IDLE_R"
+frame duration="0.05" x="68" y="138" w="14" h="16" originx="7" originy="15"
+
+animation state="IDLE_DR"
+frame duration="0.05" x="141" y="82" w="16" h="17" originx="8" originy="16" flipx="1"
+
+animation state="IDLE_D"
+frame duration="0.05" x="143" y="105" w="10" h="17" originx="5" originy="16"
+
+animation state="IDLE_DL"
+frame duration="0.05" x="141" y="82" w="16" h="17" originx="8" originy="16"
+
+animation state="IDLE_L"
+frame duration="0.05" x="68" y="138" w="14" h="16" originx="7" originy="15" flipx="1"
+
+animation state="IDLE_UL"
+frame duration="0.05" x="68" y="81" w="16" h="18" originx="8" originy="17" flipx="1"
+
+animation state="WALK_U"
+frame duration="0.1" x="46" y="106" w="11" h="17" originx="5" originy="16"
+frame duration="0.1" x="70" y="105" w="10" h="17" originx="5" originy="16"
+frame duration="0.1" x="94" y="106" w="11" h="17" originx="5" originy="16"
+frame duration="0.1" x="70" y="105" w="10" h="17" originx="5" originy="16"
+
+animation state="WALK_UR"
+frame duration="0.1" x="40" y="81" w="19" h="18" originx="9" originy="17"
+frame duration="0.1" x="68" y="81" w="16" h="18" originx="8" originy="17"
+frame duration="0.1" x="87" y="81" w="19" h="19" originx="9" originy="18"
+frame duration="0.1" x="68" y="81" w="16" h="18" originx="8" originy="17"
+
+animation state="WALK_R"
+frame duration="0.1" x="42" y="139" w="16" h="16" originx="8" originy="15"
+frame duration="0.1" x="68" y="138" w="14" h="16" originx="7" originy="15"
+frame duration="0.1" x="90" y="139" w="16" h="16" originx="8" originy="15"
+frame duration="0.1" x="68" y="138" w="14" h="16" originx="7" originy="15"
+
+animation state="WALK_DR"
+frame duration="0.1" x="117" y="82" w="19" h="17" originx="9" originy="16" flipx="1"
+frame duration="0.1" x="141" y="82" w="16" h="17" originx="8" originy="16" flipx="1"
+frame duration="0.1" x="164" y="82" w="18" h="17" originx="9" originy="16" flipx="1"
+frame duration="0.1" x="141" y="82" w="16" h="17" originx="8" originy="16" flipx="1"
+
+animation state="WALK_D"
+frame duration="0.1" x="119" y="106" w="10" h="17" originx="5" originy="16"
+frame duration="0.1" x="143" y="105" w="10" h="17" originx="5" originy="16"
+frame duration="0.1" x="167" y="106" w="10" h="17" originx="5" originy="16"
+frame duration="0.1" x="143" y="105" w="10" h="17" originx="5" originy="16"
+
+animation state="WALK_UL"
+frame duration="0.1" x="40" y="81" w="19" h="18" originx="9" originy="17" flipx="1"
+frame duration="0.1" x="68" y="81" w="16" h="18" originx="8" originy="17" flipx="1"
+frame duration="0.1" x="87" y="81" w="19" h="19" originx="9" originy="18" flipx="1"
+frame duration="0.1" x="68" y="81" w="16" h="18" originx="8" originy="17" flipx="1"
+
+animation state="WALK_L"
+frame duration="0.1" x="42" y="139" w="16" h="16" originx="8" originy="15" flipx="1"
+frame duration="0.1" x="68" y="138" w="14" h="16" originx="7" originy="15" flipx="1"
+frame duration="0.1" x="90" y="139" w="16" h="16" originx="8" originy="15" flipx="1"
+frame duration="0.1" x="68" y="138" w="14" h="16" originx="7" originy="15" flipx="1"
+
+animation state="WALK_DL"
+frame duration="0.1" x="117" y="82" w="19" h="17" originx="9" originy="16"
+frame duration="0.1" x="141" y="82" w="16" h="17" originx="8" originy="16"
+frame duration="0.1" x="164" y="82" w="18" h="17" originx="9" originy="16"
+frame duration="0.1" x="141" y="82" w="16" h="17" originx="8" originy="16"
+
+
+animation state="RUN_U"
+frame duration="0.0667" x="46" y="106" w="11" h="17" originx="5" originy="16"
+frame duration="0.0667" x="70" y="105" w="10" h="17" originx="5" originy="16"
+frame duration="0.0667" x="94" y="106" w="11" h="17" originx="5" originy="16"
+frame duration="0.0667" x="70" y="105" w="10" h="17" originx="5" originy="16"
+
+animation state="RUN_UR"
+frame duration="0.0667" x="40" y="81" w="19" h="18" originx="9" originy="17"
+frame duration="0.0667" x="68" y="81" w="16" h="18" originx="8" originy="17"
+frame duration="0.0667" x="87" y="81" w="19" h="19" originx="9" originy="18"
+frame duration="0.0667" x="68" y="81" w="16" h="18" originx="8" originy="17"
+
+animation state="RUN_R"
+frame duration="0.0667" x="42" y="139" w="16" h="16" originx="8" originy="15"
+frame duration="0.0667" x="68" y="138" w="14" h="16" originx="7" originy="15"
+frame duration="0.0667" x="90" y="139" w="16" h="16" originx="8" originy="15"
+frame duration="0.0667" x="68" y="138" w="14" h="16" originx="7" originy="15"
+
+animation state="RUN_DR"
+frame duration="0.0667" x="117" y="82" w="19" h="17" originx="9" originy="16" flipx="1"
+frame duration="0.0667" x="141" y="82" w="16" h="17" originx="8" originy="16" flipx="1"
+frame duration="0.0667" x="164" y="82" w="18" h="17" originx="9" originy="16" flipx="1"
+frame duration="0.0667" x="141" y="82" w="16" h="17" originx="8" originy="16" flipx="1"
+
+animation state="RUN_D"
+frame duration="0.0667" x="119" y="106" w="10" h="17" originx="5" originy="16"
+frame duration="0.0667" x="143" y="105" w="10" h="17" originx="5" originy="16"
+frame duration="0.0667" x="167" y="106" w="10" h="17" originx="5" originy="16"
+frame duration="0.0667" x="143" y="105" w="10" h="17" originx="5" originy="16"
+
+animation state="RUN_UL"
+frame duration="0.0667" x="40" y="81" w="19" h="18" originx="9" originy="17" flipx="1"
+frame duration="0.0667" x="68" y="81" w="16" h="18" originx="8" originy="17" flipx="1"
+frame duration="0.0667" x="87" y="81" w="19" h="19" originx="9" originy="18" flipx="1"
+frame duration="0.0667" x="68" y="81" w="16" h="18" originx="8" originy="17" flipx="1"
+
+animation state="RUN_L"
+frame duration="0.0667" x="42" y="139" w="16" h="16" originx="8" originy="15" flipx="1"
+frame duration="0.0667" x="68" y="138" w="14" h="16" originx="7" originy="15" flipx="1"
+frame duration="0.0667" x="90" y="139" w="16" h="16" originx="8" originy="15" flipx="1"
+frame duration="0.0667" x="68" y="138" w="14" h="16" originx="7" originy="15" flipx="1"
+
+animation state="RUN_DL"
+frame duration="0.0667" x="117" y="82" w="19" h="17" originx="9" originy="16"
+frame duration="0.0667" x="141" y="82" w="16" h="17" originx="8" originy="16"
+frame duration="0.0667" x="164" y="82" w="18" h="17" originx="9" originy="16"
+frame duration="0.0667" x="141" y="82" w="16" h="17" originx="8" originy="16"

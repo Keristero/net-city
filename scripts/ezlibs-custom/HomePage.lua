@@ -328,6 +328,7 @@ function HomePage:Try_open_menu(event)
     local is_owner = player_safe_secret == self.player_safe_secret
     if not is_owner then
         Net.message_player(event.player_id, "You dont have permission to manage this page")
+        return
     end
     self:Open_menu(event.player_id)
 end
