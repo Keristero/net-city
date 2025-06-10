@@ -38,11 +38,21 @@ Net:on("player_disconnect",function (event)
     end
 end)
 
+Net:on("player_avatar_change", function(event)
+  -- may change in a future update from avatar swapping removal in v2.5
+  -- health, max_health, and element will be updated on the player before this function executes
+  -- { player_id: string, texture_path: string, animation_path: string, name: string, element: string, max_health: number, prevent_default: Function }
+  print(event.player_id, event)
+end)
+
 Net:on("object_interaction", function(event)
     local area_id = Net.get_player_area(event.player_id)
     local object = Net.get_object_by_id(area_id,event.object_id)
     if object.class == "Homepage Warp" then
         home_page_helpers.transfer_player_to_correct_homepage(event.player_id,"FromNetCity")
+        return
+    elseif object.class == "Apartment Entry" then
+        visit_public_homepage(event.player_id)
         return
     end
     if home_page_helpers.loaded_homepages_by_area_id[area_id] then
@@ -70,15 +80,6 @@ function visit_public_homepage(player_id)
         home_page_helpers.transfer_player_to_correct_homepage(player_id,post_id)
     end)
 end
-
-Net:on("object_interaction", function(event)
-    local area_id = Net.get_player_area(event.player_id)
-    local object = Net.get_object_by_id(area_id,event.object_id)
-    if object.class == "Apartment Entry" then
-        visit_public_homepage(event.player_id)
-        return
-    end
-end)
 
 Net:on("tick", function(event)
     for _, homepage in pairs(home_page_helpers.loaded_homepages_by_area_id) do

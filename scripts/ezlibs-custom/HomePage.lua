@@ -15,6 +15,7 @@ local direction_menu_color = {r=100,g=100,b=40}
 
 local classes_to_disable = {"Home Warp","Custom Warp","Server Warp"}
 
+--Operations
 local create_move_selection_operation = require('scripts/ezlibs-custom/homepage_operations/move_selection')
 local create_store_object_operation = require('scripts/ezlibs-custom/homepage_operations/store_object')
 local create_place_object_operation = require('scripts/ezlibs-custom/homepage_operations/place_object')
@@ -22,6 +23,20 @@ local create_place_tile_operation = require('scripts/ezlibs-custom/homepage_oper
 local create_store_tile_operation = require('scripts/ezlibs-custom/homepage_operations/store_tile')
 local create_configure_object_operation = require('scripts/ezlibs-custom/homepage_operations/configure_object')
 local create_inspect_object_operation = require('scripts/ezlibs-custom/homepage_operations/inspect_object')
+
+--Entities
+local PageWarp = require('scripts/ezlibs-custom/homepage_entities/PageWarp')
+local FlavourText = require('scripts/ezlibs-custom/homepage_entities/FlavourText')
+local NaviSpot = require('scripts/ezlibs-custom/homepage_entities/NaviSpot')
+local BBS = require('scripts/ezlibs-custom/homepage_entities/BBS')
+local ServerWarp = require('scripts/ezlibs-custom/homepage_entities/ServerWarp')
+local home_page_entities = {
+    page_warp = PageWarp,
+    flavour_text = FlavourText,
+    navi_spot = NaviSpot,
+    bbs = BBS,
+    server_warp = ServerWarp
+}
 
 
 --[[ local page_warps = {}
@@ -128,6 +143,12 @@ end
 
 function HomePage:Enable_class(object_id)
     local object = Net.get_object_by_id(self.area_id, object_id)
+    if object.custom_properties["hp_object_type"] then
+        local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+        if HomePageEntity and HomePageEntity.on_enable then
+            HomePageEntity.on_enable(self, object)
+        end
+    end
     if object.class:sub(-8) == "DISABLED" then
         Net.set_object_class(self.area_id, object_id, object.class:sub(0,#object.class-8))
         if object.custom_properties["enabled_frame_index"] then
@@ -141,6 +162,12 @@ end
 
 function HomePage:Disable_class(object_id)
     local object = Net.get_object_by_id(self.area_id, object_id)
+    if object.custom_properties["hp_object_type"] then
+        local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+        if HomePageEntity and HomePageEntity.on_disable then
+            HomePageEntity.on_disable(self, object)
+        end
+    end
     if helpers.indexOf(classes_to_disable, object.class) ~= nil then
         Net.set_object_class(self.area_id, object_id, object.class.."DISABLED")
         if object.custom_properties["disabled_frame_index"] then
@@ -295,7 +322,6 @@ function HomePage:Replace_tile(new_tile_gid,x,y,z,flipped_h,flipped_v,rotated)
     end
 end
 
-
 function HomePage:Try_open_menu(event)
     --Allow owner to open the homepage menu
     local player_safe_secret = helpers.get_safe_player_secret(event.player_id)
@@ -335,17 +361,21 @@ end
 
 function HomePage:Handle_object_placement(new_object_id,is_reconfigure)
     return async(function()
-        await(self:Prompt_for_custom_properties(new_object_id))
         local object = Net.get_object_by_id(self.area_id,new_object_id)
         local hp_object_type = object.custom_properties["hp_object_type"]
+        local HomePageEntity = nil
+        if hp_object_type then
+            HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+        end
+        if HomePageEntity and HomePageEntity.pre_configure then
+            print("[Homepage] pre_configure for object: " .. hp_object_type)
+            await(HomePageEntity.pre_configure(self, object))
+        end
+        await(self:Prompt_for_custom_properties(new_object_id))
         if not is_reconfigure then
-            if hp_object_type then
-                if hp_object_type == "page_warp" or hp_object_type == "server_warp" then
-                    await(Async.message_player(self.editor_id,"Registering page warp..."))
-                    local warp_code = self:Register_unique_page_warp(new_object_id)
-                    Net.set_object_custom_property(self.area_id,new_object_id,'warp_code',warp_code)
-                    await(Async.message_player(self.editor_id,"Warp data is:\n"..warp_code))
-                end
+            if HomePageEntity and HomePageEntity.post_placement then
+                print("[Homepage] post_placement for object: " .. hp_object_type)
+                HomePageEntity.post_placement(self, object)
             end
         end
     end)
@@ -417,7 +447,8 @@ function HomePage:Prompt_for_custom_properties(object_id)
                 if prop_value:sub(0,9) == "direction" then
                     new_value = await(self:Direction_prompt())
                 elseif prop_value:sub(0,4) == "bool" then
-                    new_value = await(Async.quiz_player(self.editor_id,"true","false"))
+                    local quiz_res = await(Async.quiz_player(self.editor_id,"true","false"))
+                    new_value = tostring(quiz_res == 0)
                 elseif prop_value:sub(0,6) == "friend" then
                     new_value = await(self:Friend_prompt())
                 else
@@ -476,12 +507,9 @@ function HomePage:Async_object_interaction(event)
     return async(function ()
         local object = Net.get_object_by_id(self.area_id,event.object_id)
         if object.custom_properties["hp_object_type"] then
-            local hp_object_type = object.custom_properties["hp_object_type"]
-            if hp_object_type == "flavour_text" then
-                local text = object.custom_properties["text"]
-                if text ~= "" then
-                    await(Async.message_player(event.player_id,object.custom_properties["text"]))
-                end
+            local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+            if HomePageEntity and HomePageEntity.on_async_object_interaction then
+                HomePageEntity.on_async_object_interaction(self, object, event)
             end
         end
     end)
@@ -519,6 +547,7 @@ function HomePage:Update_public_status()
     end
     local public_name = self.city_warp_object.custom_properties["public_name"]
     local player_name_safe = urlencode.string(ezmemory.get_player_name_from_safesecret(self.player_safe_secret))
+    self.player_name = player_name_safe
     local should_be_public = (public_name ~= nil and public_name ~= "" and player_name_safe ~= nil and player_name_safe ~= "")
     print('should be public: ',should_be_public,public_name,player_name_safe)
     if should_be_public then
@@ -540,19 +569,9 @@ function HomePage:Refresh_page_elements()
     for index, object_id in ipairs(object_ids) do
         local object = Net.get_object_by_id(self.area_id, object_id)
         if object.custom_properties["hp_object_type"] then
-            if object.custom_properties["hp_object_type"] == "page_warp" then
-                local target_code = object.custom_properties["target_code"]
-                local warp_is_online = false
-                if target_code ~= nil then
-                    if home_page_helpers.homepage_map_memory.warp_codes[target_code] then
-                        warp_is_online = true
-                    end
-                end
-                if warp_is_online then
-                    self:Enable_class(object_id)
-                else
-                    self:Disable_class(object_id)
-                end
+            local HomePageEntity = home_page_entities[object.custom_properties["hp_object_type"]]
+            if HomePageEntity and HomePageEntity.on_refresh then
+                HomePageEntity.on_refresh(self, object)
             end
         end
     end

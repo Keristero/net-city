@@ -1,3 +1,4 @@
 *.exe
 *.tiled-session
 net_battle_server
+/potential-net-city-objects
