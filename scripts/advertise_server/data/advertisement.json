@@ -1,14 +1,14 @@
 {
     "listservers":{
-        "main":"https://www.keristero.xyz/server_list/"
+        "main":"https://onb.keristero.com/server_list/"
     },
     "advertisements":[
         {
             "unique_server_id":"net_city",
             "name":"Net City (beta)",
-            "description":"Hang out and build your own homepage",
+            "description":"Hang out and build your own homepage, if your homepage is missing - please check the gravy yum thread on the discord for instructions on how to migrate your identity file to recover your save data",
             "tags":["social"],
-            "address":"keristero.xyz:8766",
+            "address":"server.keristero.com:8766",
             "data":"",
             "icon":"netcity.png",
             "color":"rgb(40,100,255)",
