@@ -1,7 +1,0 @@
-animation state="IDLE"
-frame duration="3" x="0" y="0" w="40" h="48" originx="0" originy="0"
-frame duration="0.0833333" x="40" y="0" w="40" h="48" originx="0" originy="0"
-frame duration="0.0833333" x="80" y="0" w="40" h="48" originx="0" originy="0"
-
-animation state="TALK"
-frame duration="0.05" x="0" y="0" w="40" h="48" originx="0" originy="0"  
