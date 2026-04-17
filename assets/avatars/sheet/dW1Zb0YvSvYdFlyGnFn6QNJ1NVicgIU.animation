@@ -1,0 +1,77 @@
+imagePath="metabee_ow.png"
+
+
+animation state="IDLE_U"
+frame duration="0.05" x="28" y="99" w="18" h="28" originx="9" originy="28" Done
+
+animation state="IDLE_UR"
+frame duration="0.05" x="20" y="68" w="12" h="28" originx="6" originy="28" Done
+
+
+animation state="IDLE_R"
+frame duration="0.05" x="20" y="68" w="12" h="28" originx="6" originy="28" Done
+
+
+animation state="IDLE_DR"
+frame duration="0.05" x="20" y="68" w="12" h="28" originx="6" originy="28" Done
+
+animation state="IDLE_D"
+frame duration="0.05" x="28" y="3" w="18" h="28" originx="9" originy="28" Done
+
+animation state="IDLE_DL"
+frame duration="0.05" x="18" y="36" w="13" h="28" originx="6" originy="28" Done
+
+
+animation state="IDLE_L"
+frame duration="0.05" x="18" y="36" w="13" h="28" originx="6" originy="28" Done
+
+animation state="IDLE_UL"
+frame duration="0.05" x="18" y="36" w="13" h="28" originx="6" originy="28" Done
+
+
+animation state="WALK_U"
+frame duration="0.1" x="4" y="100" w="18" h="29" originx="9" originy="29" Done
+frame duration="0.1" x="28" y="99" w="18" h="28" originx="9" originy="28" Done
+frame duration="0.1" x="52" y="100" w="18" h="29" originx="9" originy="29" Done
+frame duration="0.1" x="28" y="99" w="18" h="28" originx="9" originy="28" Done
+
+
+animation state="WALK_UR"
+
+frame duration="0.1" x="2" y="37" w="12" h="27" originx="6" originy="27" flipx="1"
+frame duration="0.1" x="18" y="36" w="13" h="28" originx="6" originy="28" flipx="1"
+frame duration="0.1" x="34" y="37" w="14" h="27" originx="6" originy="27" flipx="1"
+
+animation state="WALK_R"
+
+frame duration="0.1" x="2" y="37" w="12" h="27" originx="6" originy="27" flipx="1"
+frame duration="0.1" x="18" y="36" w="13" h="28" originx="6" originy="28" flipx="1"
+frame duration="0.1" x="34" y="37" w="14" h="27" originx="6" originy="27" flipx="1"
+
+animation state="WALK_DR"
+
+frame duration="0.1" x="2" y="37" w="12" h="27" originx="6" originy="27" flipx="1"
+frame duration="0.1" x="18" y="36" w="13" h="28" originx="6" originy="28" flipx="1"
+frame duration="0.1" x="34" y="37" w="14" h="27" originx="6" originy="27" flipx="1"
+
+
+animation state="WALK_D"
+frame duration="0.1" x="5" y="4" w="17" h="29" originx="8" originy="29" Done
+frame duration="0.1" x="28" y="3" w="18" h="28" originx="9" originy="28" Done
+frame duration="0.1" x="52" y="4" w="18" h="29" originx="9" originy="29" Done
+
+animation state="WALK_L"
+frame duration="0.1" x="2" y="37" w="12" h="27" originx="6" originy="27" Done
+frame duration="0.1" x="18" y="36" w="13" h="28" originx="6" originy="28" Done
+frame duration="0.1" x="34" y="37" w="14" h="27" originx="6" originy="27"
+
+animation state="WALK_UL"
+frame duration="0.1" x="2" y="37" w="12" h="27" originx="6" originy="27" Done
+frame duration="0.1" x="18" y="36" w="13" h="28" originx="6" originy="28" Done
+frame duration="0.1" x="34" y="37" w="14" h="27" originx="6" originy="27"
+
+
+animation state="WALK_DL"
+frame duration="0.1" x="2" y="37" w="12" h="27" originx="6" originy="27" Done
+frame duration="0.1" x="18" y="36" w="13" h="28" originx="6" originy="28" Done
+frame duration="0.1" x="34" y="37" w="14" h="27" originx="6" originy="27"

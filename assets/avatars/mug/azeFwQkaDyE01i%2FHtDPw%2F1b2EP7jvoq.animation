@@ -1,0 +1,10 @@
+
+animation state="TALK"
+frame duration="0.08" x="0" y="0" w="40" h="48" originx="0" originy="0" flipx="0" flipy="0" 
+frame duration="0.08" x="43" y="0" w="40" h="48" originx="0" originy="0" flipx="0" flipy="0" 
+frame duration="0.08" x="86" y="0" w="40" h="48" originx="0" originy="0" flipx="0" flipy="0" 
+
+animation state="IDLE"
+frame duration="2" x="0" y="0" w="40" h="48" originx="0" originy="0" flipx="0" flipy="0" 
+frame duration="0.05" x="129" y="0" w="40" h="48" originx="0" originy="0" flipx="0" flipy="0" 
+frame duration="0.05" x="172" y="0" w="40" h="48" originx="0" originy="0" flipx="0" flipy="0" 

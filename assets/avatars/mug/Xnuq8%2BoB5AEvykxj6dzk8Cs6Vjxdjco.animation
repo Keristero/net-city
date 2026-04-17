@@ -1,0 +1,6 @@
+animation state="TALK"
+frame duration="0.1" x="0" y="0" w="40" h="50" originx="0" originy="0"
+
+animation state="IDLE"
+frame duration="0.1" x="0" y="0" w="40" h="50" originx="0" originy="0"
+
