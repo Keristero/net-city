@@ -1,6 +1,7 @@
 local json = require('scripts/advertise_server/json')
 local base64 = require('scripts/advertise_server/base64')
 local urlencode = require('scripts/advertise_server/urlencode')
+local map_overrides = require('scripts/advertise_server/data/map_overrides')
 local folder_path = "scripts/advertise_server/data/"
 local advertisement_json_path = folder_path.."advertisement.json"
 local secret_keys_json_path = folder_path.."secret_keys.json"
@@ -14,9 +15,30 @@ local listservers = {}
 local secret_keys = {}
 local server_ids = {}
 local last_map_list = {}
+local whitelist_text_paths = {} --[server_id] = path or nil
 
 --trackers for live updates
-local player_maps = {} --[player_id] = map_id
+local player_maps = {} --[hashed_id] = map_id
+local player_id_hashes = {} --[player_id] = hashed_id
+
+local function hash_id(str)
+    local h1 = 0x7A6D
+    local h2 = 0xCB2F
+    for i = 1, #str do
+        local b = string.byte(str, i)
+        h1 = (h1 * 31 + b) % 0xFFFFFF
+        h2 = (h2 * 37 + b) % 0xFFFFFF
+    end
+    return string.format("%06x%06x", h1, h2)
+end
+
+local function count_player_maps()
+    local count = 0
+    for _ in pairs(player_maps) do
+        count = count + 1
+    end
+    return count
+end
 
 --shorthands for async stuff.
 local function async(p)
@@ -38,21 +60,35 @@ local function save_image_data(path,data)
     f:close()
 end
 
+local function sync_player_info_for_all_servers()
+    set_pending_field_for_all_servers("player_maps",player_maps)
+    set_pending_field_for_all_servers("online_players",count_player_maps())
+end
+
 --Event handlers
 Net:on("player_connect", function(event)
-    player_maps[event.player_id] = 'default'--when a landing script transfers the player this will be immediately overwritten correctly (i think)
-    set_pending_field_for_all_servers("player_maps",player_maps)
+    local hashed = hash_id(event.player_id)
+    player_id_hashes[event.player_id] = hashed
+    player_maps[hashed] = 'default'--when a landing script transfers the player this will be immediately overwritten correctly (i think)
+    sync_player_info_for_all_servers()
 end)
 
 Net:on("player_disconnect", function(event)
-    player_maps[event.player_id] = nil
-    set_pending_field_for_all_servers("player_maps",player_maps)
+    local hashed = player_id_hashes[event.player_id]
+    if hashed then
+        player_maps[hashed] = nil
+        player_id_hashes[event.player_id] = nil
+    end
+    sync_player_info_for_all_servers()
 end)
 
 Net:on("player_area_transfer", function(event)
-    local player_area = Net.get_player_area(event.player_id)
-    player_maps[event.player_id] = player_area
-    set_pending_field_for_all_servers("player_maps",player_maps)
+    local hashed = player_id_hashes[event.player_id]
+    if hashed then
+        local player_area = Net.get_player_area(event.player_id)
+        player_maps[hashed] = player_area
+        sync_player_info_for_all_servers()
+    end
 end)
 
 function set_pending_field_for_all_servers(field_name,value)
@@ -71,6 +107,29 @@ end
 
 function clear_pending_fields(server_id)
     public_info.pending_fields[server_id] = {}
+end
+
+function get_whitelist_text_path(server_id)
+    return whitelist_text_paths[server_id]
+end
+
+function write_whitelist_file(path, content)
+    local temp_path = path .. ".tmp"
+    local ok, err = pcall(function()
+        local f = io.open(temp_path, "w")
+        if f then
+            f:write(content)
+            f:flush()
+            f:close()
+            os.rename(temp_path, path)
+            print('[advertise_server] whitelist written to '..path)
+        else
+            print('[advertise_server] ERROR: could not open whitelist file for writing: '..temp_path)
+        end
+    end)
+    if not ok then
+        print('[advertise_server] ERROR: failed to write whitelist: '..tostring(err))
+    end
 end
 
 function build_payload(server_id)
@@ -127,6 +186,13 @@ function sync_to_servers(server_id)
                 if data and data.secret_key ~= nil then
                     await(save_secret_key(secret_keys_json_path,server_id,listserver_name,data.secret_key))
                 end
+                -- Handle whitelist response
+                if data and data.whitelist ~= nil then
+                    local whitelist_path = get_whitelist_text_path(server_id)
+                    if whitelist_path then
+                        write_whitelist_file(whitelist_path, data.whitelist)
+                    end
+                end
             end
         end
         public_info.time_since_last_sync[server_id] = 0
@@ -165,6 +231,13 @@ local function initialize_pending_fields_from_advertisements(advertisements)
         for field_name, value in pairs(advertisement) do
             set_pending_field(server_id,field_name,value)
         end
+        --Reset player count to 0 since the server just started
+        set_pending_field(server_id,"player_maps",player_maps)
+        set_pending_field(server_id,"online_players",0)
+        --Capture whitelist text path for this server
+        if advertisement.whitelist_text_path then
+            whitelist_text_paths[server_id] = advertisement.whitelist_text_path
+        end
     end
 end
 
@@ -184,27 +257,7 @@ local function build_server_map(areas)
         local objects = Net.list_objects(area_id)
         for j, object_id in ipairs(objects) do
             local object = Net.get_object_by_id(area_id,object_id)
-            local custom_p = object.custom_properties
-            --record map connections
-            --local (ezlibs warps)
-            if custom_p["Target Area"] then
-                server_map[area_id].l[custom_p["Target Area"]] = {id=custom_p["Target Object"]}
-            end
-            if custom_p["hp_object_type"] == "city_warp" then
-                server_map[area_id].l["default"] = {id=1}
-            end
-            --remote (server warps)
-            local address = custom_p["address"]
-            local port = custom_p["port"]
-            if address and port then
-                server_map[area_id].r[address..":"..port] = {data=custom_p["data"],incoming_data=custom_p["warp_code"]}
-            end
-            --record extra map info
-            if object.class == "Shop" then
-                map_info.has_shop = true
-            elseif object.class == "Board" then
-                map_info.has_board = true
-            end
+            map_overrides.process_object(area_id, map_info, object)
         end
     end
     return server_map

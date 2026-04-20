@@ -12,7 +12,9 @@
             "data":"",
             "icon":"netcity.png",
             "color":"rgb(40,100,255)",
-            "advertise_map":true
+            "advertise_map":true,
+            "whitelist_collection_eid":null,
+            "whitelist_text_path":null
         }
     ]
 }

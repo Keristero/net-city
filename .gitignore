@@ -1,4 +1,5 @@
 *.exe
 *.tiled-session
 net_battle_server
-/potential-net-city-objectsassets/avatars/
+/potential-net-city-objects
+assets/avatars/
